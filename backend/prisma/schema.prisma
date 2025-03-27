@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int         @id @default(autoincrement())
+  username    String      @unique
+  email       String      @unique
+  name        String?
+  phoneNumber String?
+  password    String
+  properties  Property[]
+  reviews     Review[]
+  bookings    Booking[]
+  accountType AccountType @default(USER)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Property {
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String
+  image       String[]
+  price       Int
+  location    String
+  userId      Int
+  user        User           @relation(fields: [userId], references: [id])
+  createdAt   DateTime       @default(now())
+  ratings     Float?         @default(0.0)
+  reviews     Review[]
+  bookings    Booking[]
+  status      PropertyStatus @default(AVAILABLE)
+  updatedAt   DateTime       @updatedAt
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  propertyId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+  rating     Float
+  comment    String
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Booking {
+  id         Int      @id @default(autoincrement())
+  propertyId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  startDate  DateTime
+  endDate    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  BOOKED
+  UNLISTED
+}
+
+enum AccountType {
+  USER
+  HOST
+  ADMIN
+}
