@@ -3,13 +3,19 @@
   "name": "backend",
   "main": "src/index.ts",
   "compatibility_date": "2025-03-26",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    "DATABASE_URL": "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZjM4ODg3YzEtMmEzMi00NjI4LWEwMWMtZGE1YjdkZWJjNjNhIiwidGVuYW50X2lkIjoiYmM0NjQ3Zjk5MTQ2MDFhMjdlYjFhMzEzNWZiMDgxYzhkZjI5ZTY4N2Q2ZDQzNDdmZWI2ZjcyZTZkNmM0OTQ3YyIsImludGVybmFsX3NlY3JldCI6IjBmNTJkNmI3LTZhM2MtNGM0My04ZTUzLWI5MDM4MzdmYjU3ZSJ9.WMw4iM67u7fOYK1jXGwN_As3U1SRGM0fv7Lwia8Wo7I",
+    "JWT_SECRET": "KhalidArbn",
+    "CLOUDINARY_CLOUD_NAME": "dfcr29a7r",
+    "CLOUDINARY_API_KEY": "459815643398939",
+    "CLOUDINARY_API_SECRET": "R6FzT8dees7GLMI5SY9lForThfU",
+  },
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
-  "vars": {
-    "DATABASE_URL": "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZjM4ODg3YzEtMmEzMi00NjI4LWEwMWMtZGE1YjdkZWJjNjNhIiwidGVuYW50X2lkIjoiYmM0NjQ3Zjk5MTQ2MDFhMjdlYjFhMzEzNWZiMDgxYzhkZjI5ZTY4N2Q2ZDQzNDdmZWI2ZjcyZTZkNmM0OTQ3YyIsImludGVybmFsX3NlY3JldCI6IjBmNTJkNmI3LTZhM2MtNGM0My04ZTUzLWI5MDM4MzdmYjU3ZSJ9.WMw4iM67u7fOYK1jXGwN_As3U1SRGM0fv7Lwia8Wo7I",
-    "JWT_SECRET": "KhalidArbn"
-  },
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",

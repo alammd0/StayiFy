@@ -32,7 +32,7 @@ model Property {
   id          Int            @id @default(autoincrement())
   title       String
   description String
-  image       String[]
+  image       String
   price       Int
   location    String
   userId      Int

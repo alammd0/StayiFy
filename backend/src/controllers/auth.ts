@@ -39,6 +39,7 @@ export const signup = async (c: Context) => {
                 name: body.name,
                 email: body.email,
                 password: hashPassword,
+                accountType : body.accountType,
                 phoneNumber: body.phoneNumber
             }
         })
@@ -122,15 +123,16 @@ export const login = async (c: Context) => {
         }
 
         // create jwt token 
-        const payload = {
-            id: user.id,
-            name: user.name,
-            username: user.username
-        }
-
+ 
         const token = await sign({
-            payload,
+            payload: {
+                id: user.id,
+                name: user.name,
+                username: user.username,
+                accountType: user.accountType
+            },
             exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24)
+            
         }, c.env.JWT_SECRET);
 
         // finalyy send response 
