@@ -5,11 +5,13 @@
     "deploy": "wrangler deploy --minify"
   },
   "dependencies": {
+    "@mkadevs/common-app": "^1.0.1",
     "@prisma/client": "^6.5.0",
     "@prisma/extension-accelerate": "^1.3.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "hono": "^4.7.5",
+    "luxon": "^3.6.0",
     "prisma": "^6.5.0"
   },
   "devDependencies": {
