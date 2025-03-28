@@ -12,6 +12,7 @@
     "CLOUDINARY_CLOUD_NAME": "dfcr29a7r",
     "CLOUDINARY_API_KEY": "459815643398939",
     "CLOUDINARY_API_SECRET": "R6FzT8dees7GLMI5SY9lForThfU",
+    "CLOUDINARY_UPLOAD_PRESET": "property_uploads"
   },
   // "compatibility_flags": [
   //   "nodejs_compat"
