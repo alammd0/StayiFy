@@ -1,7 +1,8 @@
 import { Context } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import prisma from "../utils/prisma";
+import { createPropertyInput, idSchema } from "@mkadevs/common-app/dist/Validation/property";
+import { error } from "console";
 
 interface cloudinaryForm {
     secure_url: string
@@ -16,12 +17,44 @@ export const createProperty = async (c: Context) => {
     try {
 
         const formData = await c.req.formData();
-        console.log("Form Data : " + formData);
+
+        // Retrieve userId properly
+        const user = c.get("user");
+        if (!user || !user.id) {
+            return c.json({
+                message: "Unauthorized: User ID is required",
+            }, 401);
+        }
+
+        const userId = Number(user.id);
+
+        if (isNaN(userId)) {
+            return c.json({
+                message: "Invalid user ID",
+            }, 400);
+        }
+
+        // covert form Data into object
+        const propertyData = {
+            title: formData.get("title") as string,
+            description: formData.get("description") as string,
+            price: Number(formData.get("price")),
+            location: formData.get("location") as string,
+            image: "",
+            userId: userId
+        }
+
+        // validate input Data
+        const { success } = createPropertyInput.safeParse(propertyData);
+
+        if (!success) {
+            return c.json({
+                message: "Validation Failed",
+                error: createPropertyInput.safeParse(propertyData).error
+            })
+        }
+
         const file = formData.get("image") as File;
-
-        const userId = c.get("user")?.id as string;
-
-        console.log("User ID : " + userId)
 
         if (!file) {
             return c.json({
@@ -52,17 +85,12 @@ export const createProperty = async (c: Context) => {
 
         const cloudinaryData: cloudinaryForm = await clooudinaryResponse.json();
 
-        console.log("Cloudinary Response : " + cloudinaryData.secure_url);
+        // console.log("Cloudinary Response : " + cloudinaryData.secure_url);
+
+        propertyData.image = cloudinaryData.secure_url;
 
         const property = await prisma.property.create({
-            data: {
-                title: formData.get("title") as string,
-                description: formData.get("description") as string,
-                image: cloudinaryData.secure_url,
-                price: Number(formData.get("price")),
-                location: formData.get("location") as string,
-                userId: Number(userId)
-            }
+            data: propertyData,
         });
 
         return c.json({
@@ -90,12 +118,9 @@ export const updatedProperty = async (c: Context) => {
         // get the form Data
         const formData = await c.req.formData();
 
-        // console.log("Form Data :" + formData)
-
         // get Property Id
         const propertyId = formData.get("id") as string;
 
-        // console.log("Property Id : " + propertyId)
 
         // check 
         if (!propertyId) {
@@ -195,6 +220,16 @@ export const deleteProperty = async (c: Context) => {
 
         // 1. find propery if from parameter
         const propertyId = c.req.param("id");
+
+        // const { success } = idSchema.safeParse(propertyId);
+
+        // if (!success) {
+        //     return c.json({
+        //         message: "Validation Failed",
+        //         error: idSchema.safeParse(propertyId).error
+        //     })
+        // }
+
         console.log("Property id : " + propertyId);
 
         // 2. check property exit or not
@@ -274,8 +309,16 @@ export const getPropertyById = async (c: Context) => {
     try {
 
         const propertyId = c.req.param("id");
-
         console.log("property Id : " + propertyId)
+
+        // const { success } = idSchema.safeParse(propertyId);
+
+        // if (!success) {
+        //     return c.json({
+        //         message: "Validation Failed",
+        //         error: idSchema.safeParse(propertyId).error
+        //     }, )
+        // }
 
         if (!propertyId) {
             return c.json({
