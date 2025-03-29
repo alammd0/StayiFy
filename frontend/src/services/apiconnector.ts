@@ -21,8 +21,8 @@ export const apiConnector = async (url: string, method: string, data: any, heade
             url: url,
             method: method,
             data: data || null,
-            headers: headers,
-            params: params
+            headers: headers || null,
+            params: params || null
         });
 
         return response;

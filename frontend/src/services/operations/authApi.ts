@@ -11,48 +11,71 @@ const {
 } = authEndpoints
 
 
-interface signupInput {
-    username: string,
-    name: string,
-    email: string,
-    password: string,
-    phoneNumber: string,
-    navigate: any
+interface SignupParams {
+    username: string;
+    name: string;
+    email: string;
+    password: string;
+    phoneNumber: string;
+    accountType: string;
+    navigate: (path: string) => void;
 }
 
-// signup
-export const signup = ({ username, name, email, password, phoneNumber, navigate }: signupInput) => {
+interface loginInput {
+    email: string
+    password: string
+    navigate: (path: string) => void;
+}
+
+
+export const signup = ({ username, name, email, password, phoneNumber, accountType, navigate }: SignupParams) => {
     return async (dispatch: any) => {
         const toastId = toast.loading("Please wait...");
         dispatch(setLoading(true));
+
         try {
+            console.log("Sending User Data:", { username, name, email, password, phoneNumber, accountType });
 
-            const response: any = await apiConnector(SIGNUP_API, "POST", { username, name, email, password, phoneNumber });
+            const response: any = await apiConnector(SIGNUP_API, "POST", { username, name, email, password, phoneNumber, accountType });
 
-            console.log("response : ", response.data);
+            console.log("Resopose : " + response)
 
-            console.log("response : ", response.data.succes);
+            if (!response || !response.data) {
+                throw new Error("Invalid API response");
+            }
 
-            if (!response.data.success) throw new Error(response.data.message);
+            console.log("Signup Response:", response.data);
 
-            dispatch(setUser(response.data.user));
+            dispatch(setUser(response.data.data));
             dispatch(setToken(response.data.token));
-            toast.success("Signup Successfull", { id: toastId });
-            navigate("/login");
 
+            toast.dismiss(toastId);
+            toast.success("Signup Successful");
+            navigate("/login");
         }
-        catch (err) {
-            console.log(err);
-            toast.error("Signup Failed", { id: toastId });
-            dispatch(setLoading(false));
+        catch (err: any) {
+            console.error("Signup Error:", err);
+
+            if (err.response) {
+                console.error("Error Response Data:", err.response.data);
+                console.error("Error Status Code:", err.response.status);
+            } else {
+                console.error("Error Message:", err.message);
+            }
+
+            toast.dismiss(toastId);
+            const errorMessage = err.response?.data?.message || "Signup Failed";
+            toast.error(errorMessage);
         }
+
         dispatch(setLoading(false));
-        toast.dismiss(toastId);
-    }
-}
+    };
+};
+
+
 
 // login
-export const login = ({ email, password, navigate }: signupInput) => {
+export const login = ({ email, password, navigate }: loginInput) => {
     return async (dispatch: any) => {
         const toastId = toast.loading("Please wait...");
         dispatch(setLoading(true));
@@ -60,18 +83,20 @@ export const login = ({ email, password, navigate }: signupInput) => {
 
             const response: any = await apiConnector(LOGIN_API, "POST", { email, password });
 
-            console.log("response : ", response.data);
+            console.log("Resopose : " + response)
 
-            console.log("response : ", response.data.succes);
+            if (!response || !response.data) {
+                throw new Error("Invalid API response");
+            }
 
-            if (!response.data.success) throw new Error(response.data.message);
+            console.log("response Inside login : ", response.data);
 
-            dispatch(setUser(response.data.user));
+            dispatch(setUser(response.data.data));
             dispatch(setToken(response.data.token));
-            toast.success("Login Successfull", { id: toastId });
+
+            toast.dismiss(toastId);
+            toast.success("LoginSuccessful");
             navigate("/home");
-
-
         }
         catch (err) {
             console.log(err);
@@ -79,7 +104,6 @@ export const login = ({ email, password, navigate }: signupInput) => {
             dispatch(setLoading(false));
         }
         dispatch(setLoading(false));
-        toast.dismiss(toastId);
     }
 }
 

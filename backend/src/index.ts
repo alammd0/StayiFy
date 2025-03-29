@@ -1,10 +1,12 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import authRoutes from './routes/authRoutes'
 import propertyRoutes from './routes/propertyRoutes'
 
 import { logger } from 'hono/logger'
 
 const app = new Hono()
+app.use("*", cors())
 
 app.use("*", logger())
 

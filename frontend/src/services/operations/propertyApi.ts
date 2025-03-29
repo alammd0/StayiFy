@@ -170,4 +170,3 @@ export const deleteProperty = (id: any, data: any, token: string, navigat: any) 
         toast.dismiss(toastId);
     }
 }
-

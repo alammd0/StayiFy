@@ -1,11 +1,20 @@
+import { Link, Links, Route, Routes } from "react-router-dom"
+import Signup from "./pages/Signup"
+import Login from "./pages/Login"
+
 function App() {
 
 
   return (
-    <div className="bg-red-100">
-      hellos
+    <div>
+      {/* <Navbar /> */}
 
-      npm i react-router-dom
+      {/* <Home /> */}
+
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </div>
   )
 }
