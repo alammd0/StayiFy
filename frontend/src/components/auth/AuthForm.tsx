@@ -3,6 +3,12 @@ import { AppDispatch } from "../../redux/store/app"
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, signup } from "../../services/operations/authApi";
+import { RiUser4Fill } from "react-icons/ri";
+import { MdEmail } from "react-icons/md";
+import { BsFillTelephoneFill } from "react-icons/bs";
+import { TbLockPassword } from "react-icons/tb";
+import { FaUser } from "react-icons/fa";
+
 
 interface AuthFormProps {
     type: "signup" | "login"
@@ -78,27 +84,31 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
 
     return (
-        <div>
-            <div>
+        <div className="w-full flex flex-col gap-3">
+            <div className="text-2xl font-bold">
                 {isSignup ? "Create Account" : "Welcome Back"}
             </div>
 
             <div>
-                <form onSubmit={submitHandler}>
+                <form className="flex flex-col gap-2" onSubmit={submitHandler}>
                     {/* username */}
                     {isSignup && (
                         <div>
                             <label htmlFor="username">
-                                <p>Username : <sup>*</sup></p>
-                                <input
-                                    type="text"
-                                    name="username"
-                                    id="username"
-                                    placeholder="Enter your username"
-                                    value={formData.username}
-                                    required
-                                    onChange={inputChangeHandler}
-                                />
+                                <p className="text-md font-semibold text-slate-400">Username : <sup className="text-red-500">*</sup></p>
+                                <div className="flex gap-2 items-center px-3 py-1 rounded-md border-b border-slate-400 focus:outline-none mb-1">
+                                    <RiUser4Fill size={17} />
+                                    <input
+                                        type="text"
+                                        className="w-full border-none focus:outline-none"
+                                        name="username"
+                                        id="username"
+                                        placeholder="Enter your username"
+                                        value={formData.username}
+                                        required
+                                        onChange={inputChangeHandler}
+                                    />
+                                </div>
                             </label>
                         </div>
                     )}
@@ -106,16 +116,22 @@ const AuthForm = ({ type }: AuthFormProps) => {
                     {/* email */}
                     <div>
                         <label htmlFor="email">
-                            <p>Email : <sup>*</sup></p>
-                            <input
-                                type="email"
-                                name="email"
-                                id="email"
-                                placeholder="Enter valid email address"
-                                value={formData.email}
-                                required
-                                onChange={inputChangeHandler}
-                            />
+                            <p className="text-md font-semibold text-slate-400">Email : <sup>*</sup></p>
+
+                            <div className="flex gap-2 items-center px-3 py-1 rounded-md border-b border-slate-400 focus:outline-none mb-1">
+                                <MdEmail size={17} />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    id="email"
+                                    className="w-full border-none focus:outline-none"
+                                    placeholder="Enter valid email address"
+                                    value={formData.email}
+                                    required
+                                    onChange={inputChangeHandler}
+                                />
+                            </div>
+
                         </label>
                     </div>
 
@@ -123,16 +139,21 @@ const AuthForm = ({ type }: AuthFormProps) => {
                     {isSignup && (
                         <div>
                             <label htmlFor="name">
-                                <p>Name : <sup>*</sup></p>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    id="name"
-                                    placeholder="Enter your name"
-                                    value={formData.name}
-                                    required
-                                    onChange={inputChangeHandler}
-                                />
+                                <p className="text-md font-semibold text-slate-400">Name : <sup>*</sup></p>
+                                <div className="flex gap-2 items-center px-3 py-1 rounded-md border-b border-slate-400 focus:outline-none mb-1">
+                                    <FaUser size={17} />
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        id="name"
+                                        className="w-full border-none focus:outline-none"
+                                        placeholder="Enter your name"
+                                        value={formData.name}
+                                        required
+                                        onChange={inputChangeHandler}
+                                    />
+                                </div>
+
                             </label>
                         </div>
                     )}
@@ -141,10 +162,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
                     {
                         isSignup && (
                             <label htmlFor="accountType">
-                                <p>Role : <sup>*</sup></p>
-                                <select name="accountType" id="accountType" value={formData.accountType} onChange={inputChangeHandler}>
-                                    <option value="USER">USER</option>
-                                    <option value="HOST">HOST</option>
+                                <p className="text-md font-semibold text-slate-400">Role : <sup>*</sup></p>
+                                <select name="accountType" id="accountType" className="flex gap-2 items-center px-3 py-1 rounded-md border-b border-slate-400 focus:outline-none mb-1" value={formData.accountType} onChange={inputChangeHandler}>
+                                    <option value="USER" className="w-full border-none focus:outline-none">USER</option>
+                                    <option value="HOST" className="w-full border-none focus:outline-none">HOST</option>
                                 </select>
                             </label>
 
@@ -155,18 +176,23 @@ const AuthForm = ({ type }: AuthFormProps) => {
                     {isSignup && (
                         <div>
                             <label htmlFor="phoneNumber">
-                                <p>Phone Number : <sup>*</sup></p>
-                                <input
-                                    type="tel"
-                                    name="phoneNumber"
-                                    id="phoneNumber"
-                                    placeholder="Enter your phone number"
-                                    value={formData.phoneNumber}
-                                    required
-                                    onChange={inputChangeHandler}
-                                    pattern="[0-9]*"
-                                    autoComplete="tel"
-                                />
+                                <p className="text-md font-semibold text-slate-400">Phone Number : <sup>*</sup></p>
+                                <div className="flex gap-2 items-center px-3 py-1 rounded-md border-b border-slate-400 focus:outline-none mb-1">
+                                    <BsFillTelephoneFill size={17} />
+                                    <input
+                                        type="tel"
+                                        name="phoneNumber"
+                                        id="phoneNumber"
+                                        className="w-full border-none focus:outline-none"
+                                        placeholder="Enter your phone number"
+                                        value={formData.phoneNumber}
+                                        required
+                                        onChange={inputChangeHandler}
+                                        pattern="[0-9]*"
+                                        autoComplete="tel"
+                                    />
+                                </div>
+
                             </label>
                         </div>
                     )}
@@ -174,20 +200,25 @@ const AuthForm = ({ type }: AuthFormProps) => {
                     {/* password */}
                     <div>
                         <label htmlFor="password">
-                            <p>Password : <sup>*</sup></p>
-                            <input
-                                type="password"
-                                name="password"
-                                id="password"
-                                placeholder="Enter your password"
-                                value={formData.password}
-                                required
-                                onChange={inputChangeHandler}
-                            />
+                            <p className="text-md font-semibold text-slate-400">Password : <sup>*</sup></p>
+                            <div className="flex gap-2 items-center px-3 py-1 rounded-md border-b border-slate-400 focus:outline-none mb-1">
+                                < TbLockPassword size={17} />
+                                <input
+                                    type="password"
+                                    name="password"
+                                    id="password"
+                                    placeholder="Enter your password"
+                                    value={formData.password}
+                                    className="w-full border-none focus:outline-none"
+                                    required
+                                    onChange={inputChangeHandler}
+                                />
+                            </div>
+
                         </label>
                     </div>
 
-                    <button disabled={loading} type="submit">
+                    <button disabled={loading} type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-2 rounded-md">
                         {loading ? "Loading..." : isSignup ? "Sign Up" : "Log In"}
                     </button>
                 </form>
