@@ -7,7 +7,7 @@ const Sidebar = () => {
     const [active, setActive] = useState(location.pathname);
 
     return (
-        <div className="w-[300px] h-screen bg-slate-600 flex flex-col gap-5 pt-10 pl-10 pr-10">
+        <div className="w-[300px] min-h-screen bg-slate-600 flex flex-col gap-5 pt-10 pl-10 pr-10">
             <div className="text-xl uppercase font-bold text-slate-200 cursor-pointer bg-slate-400 text-center px-1 py-2 rounded-sm">
                 <Link to="/">
                     StayIfy

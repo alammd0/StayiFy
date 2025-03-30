@@ -385,3 +385,50 @@ export const getPropertyById = async (c: Context) => {
         }, 500)
     }
 }
+
+
+export const getPropertyByUserId = async (c: Context) => {
+    try {
+
+        const prisma = new PrismaClient({
+            datasourceUrl: c.env.DATABASE_URL,
+        }).$extends(withAccelerate());
+
+
+        const user = c.get("user");
+        console.log("Full User Object: ", user);
+
+        if (!user || !user.id) {
+            return c.json({
+                message: "Unauthorized: User ID is required",
+            }, 401);
+        }
+
+
+        const propertyDetaThisUser = await prisma.property.findMany({
+            where: {
+                userId: user.id
+            }
+        });
+
+
+        if (propertyDetaThisUser.length === 0) {
+            return c.json({
+                message: "No properties found for this user",
+                data: []
+            }, 200);
+        }
+
+
+        return c.json({
+            message: "Properties retrieved successfully",
+            data: propertyDetaThisUser
+        }, 200);
+
+    } catch (err) {
+        console.error("Error fetching properties:", err);
+        return c.json({
+            message: "Error fetching user properties"
+        }, 500);
+    }
+};

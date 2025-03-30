@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { createProperty, updatedProperty, deleteProperty, getAllProperty, getPropertyById } from "../controllers/property";
+import { createProperty, updatedProperty, deleteProperty, getAllProperty, getPropertyById, getPropertyByUserId } from "../controllers/property";
 import { auth, hostRole } from "../middleware/Auth";
 
 const propertyRoutes = new Hono();
@@ -9,6 +9,7 @@ const propertyRoutes = new Hono();
 propertyRoutes.post("/create-property", auth, hostRole, createProperty);
 propertyRoutes.put("/update-property", auth, hostRole, updatedProperty);
 propertyRoutes.delete("/delete-property/:id", auth, hostRole, deleteProperty);
+propertyRoutes.get("/my-property", auth, hostRole, getPropertyByUserId);
 
 
 // all route 

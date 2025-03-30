@@ -4,13 +4,15 @@ import { setLoading } from "../../redux/slices/authSlice"
 import { apiConnector } from "../apiconnector"
 import { propertyEndpoints } from "../../services/apis"
 import { setProperty, setUpdatedProperty } from "../../redux/slices/propertySlice"
+import { setDetails } from "../../redux/slices/myProperty"
 
 const {
     CREATE_PROPERTY_API,
     GET_ALL_PROPERTY_API,
     GET_PROPERTY_BY_ID_API,
     UPDATE_PROPERTY_API,
-    DELETE_PROPERTY_API
+    DELETE_PROPERTY_API,
+    PROPERTY_DETAILS_BY_USERID
 } = propertyEndpoints
 
 interface SignupParams {
@@ -24,11 +26,9 @@ interface SignupParams {
 }
 
 
-// create property
+// create property(Uses)
 export const createProperty = ({ title, description, price, location, image, navigate, token }: SignupParams) => {
     return async (dispatch: any) => {
-        console.log("Inside create property", title, description, price, location, image);
-        console.log("token", token);
 
         if (!token) {
             toast.error("Authentication token is missing. Please log in.");
@@ -45,7 +45,7 @@ export const createProperty = ({ title, description, price, location, image, nav
             formData.append("price", price.toString());
             formData.append("location", location);
 
-            
+
             if (image instanceof File) {
                 formData.append("image", image);
             } else {
@@ -175,6 +175,9 @@ export const updateProperty = (data: any, token: string, navigate: any) => {
 // delete property
 export const deleteProperty = (id: any, data: any, token: string, navigat: any) => {
     return async (dispatch: any) => {
+
+
+
         const toastId = toast.loading("Please wait...");
         dispatch(setLoading(true));
 
@@ -201,6 +204,44 @@ export const deleteProperty = (id: any, data: any, token: string, navigat: any) 
             dispatch(setLoading(false));
         }
 
+        dispatch(setLoading(false));
+        toast.dismiss(toastId);
+    }
+}
+
+
+export const getMypropertyDetails = (token: string | null) => {
+    return async (dispatch: any) => {
+
+        console.log("token : ", token);
+
+        const toastId = toast.loading("Please wait...");
+        dispatch(setLoading(true));
+        try {
+            const response: any = await apiConnector(
+                PROPERTY_DETAILS_BY_USERID,
+                "GET",
+                null,
+                {
+                    Authorization: `Bearer ${token}`,
+                }
+            );
+
+            if (!response.data) throw new Error(response.data.message);
+
+            console.log("Inside property using user iD : " + response);
+            dispatch(setDetails(response.data));
+            dispatch(setLoading(false));
+            toast.success("Get Property By Id Successfull");
+            return response;
+        }
+        catch (err) {
+
+            console.log(err);
+            dispatch(setLoading(false));
+            toast.error("Get Property By Id Failed");
+
+        }
         dispatch(setLoading(false));
         toast.dismiss(toastId);
     }

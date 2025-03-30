@@ -1,11 +1,15 @@
 import { Next } from "hono";
 import { Context } from "hono";
+import { use } from "hono/jsx";
 import { verify } from "hono/jwt";
 
 
-export const auth = async (c: Context, next: Next) => {
+interface Payload {
+    userId : number
+}
 
-    console.log("Inside Auth Middleware before", c.req.header("Authorization"));
+
+export const auth = async (c: Context, next: Next) => {
 
     const authHeader = c.req.header("Authorization") || "";
 
@@ -33,7 +37,10 @@ export const auth = async (c: Context, next: Next) => {
         console.log("Decoded Token : " + JSON.stringify(decodedToken));
 
         c.set("user", decodedToken.payload);
-        
+
+        // // fetch user details
+        // const user = await 
+
         return next();
     } catch (err) {
         console.error(err);
@@ -49,7 +56,7 @@ export const userRole = async (c: Context, next: Next) => {
     try {
 
         const user = c.get("user")
-        console.log("Inside USER Role : " + user.accountType);
+        console.log("Inside USER Role : " + user);
 
         if (user.accountType !== "USER") {
             return c.json({
@@ -78,7 +85,7 @@ export const hostRole = async (c: Context, next: Next) => {
     try {
 
         const user = c.get("user")
-        console.log("Inside HOST Role : " + user.accountType);
+        console.log("Inside HOST Role : " + user);
 
         if (user.accountType !== "HOST") {
             return c.json({

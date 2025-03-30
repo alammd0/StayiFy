@@ -5,7 +5,7 @@ import Navbar from "./components/core/Navbar"
 import Profile from "./components/sidebar/Profile";
 import DashboardLayout from "./pages/DashboardLayout";
 import CreateProperty from "./components/sidebar/CreateProperty";
-import Propertes from "./components/sidebar/Propertes";
+import MyProperties from "./components/sidebar/MyProperties";
 
 function App() {
 
@@ -30,7 +30,7 @@ function App() {
           <Route index element={<Navigate to="profile" />} />
           <Route path="profile" element={<Profile />} />
           <Route path="create-property" element={<CreateProperty />} />
-          <Route path="my-properties" element={<Propertes />} />
+          <Route path="my-properties" element={<MyProperties />} />
 
         </Route>
 
