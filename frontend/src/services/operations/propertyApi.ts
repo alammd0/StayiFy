@@ -13,37 +13,72 @@ const {
     DELETE_PROPERTY_API
 } = propertyEndpoints
 
-// create property
-export const createProperty = (data: any, token: string, navigate: any) => {
-    return async (dispatch: any) => {
-        const toastId = toast.loading("Please wait...");
-        dispatch(setLoading(true));
-        try {
-            const response: any = await apiConnector(CREATE_PROPERTY_API, "POST", data, {
-                headers: {
-                    authorization: `Bearer ${token}`
-                }
-            });
-
-            console.log("response : ", response.data);
-
-            console.log("Create-course response: ", response.data.succes);
-
-            if (!response.data.success) throw new Error(response.data.message);
-            dispatch(setProperty(response.data.data));
-            dispatch(setLoading(false));
-            navigate("/all-property");
-            toast.success("Create Property Successfull", { id: toastId });
-        }
-        catch (err) {
-            console.log(err);
-            toast.error("Create Property Failed", { id: toastId });
-            dispatch(setLoading(false));
-        }
-        dispatch(setLoading(false));
-        toast.dismiss(toastId);
-    }
+interface SignupParams {
+    title: string;
+    description: string;
+    price: number;
+    location: string;
+    image: File | null;
+    navigate: (path: string) => void;
+    token: string | null;
 }
+
+
+// create property
+export const createProperty = ({ title, description, price, location, image, navigate, token }: SignupParams) => {
+    return async (dispatch: any) => {
+        console.log("Inside create property", title, description, price, location, image);
+        console.log("token", token);
+
+        if (!token) {
+            toast.error("Authentication token is missing. Please log in.");
+            return navigate("/login");
+        }
+
+        const toastId = toast.loading("Creating Property...");
+        dispatch(setLoading(true));
+
+        try {
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("description", description);
+            formData.append("price", price.toString());
+            formData.append("location", location);
+
+            
+            if (image instanceof File) {
+                formData.append("image", image);
+            } else {
+                console.error("Invalid file format");
+                toast.error("Invalid file format. Please select a valid image.");
+                return;
+            }
+
+            const response: any = await apiConnector(
+                CREATE_PROPERTY_API,
+                "POST",
+                formData,
+                {
+                    Authorization: `Bearer ${token}`,
+                }
+            );
+
+            console.log("response:", response?.data);
+
+            if (!response.data) throw new Error(response.data);
+            dispatch(setProperty(response.data.data));
+            toast.success("Property created successfully!");
+            navigate("/dashboard/my-properties");
+        } catch (err) {
+            console.error(err);
+            toast.error("Create Property Failed");
+        } finally {
+            dispatch(setLoading(false));
+            toast.dismiss(toastId);
+        }
+    };
+};
+
 
 // get all property
 export const getAllProperty = (navigate: any) => {

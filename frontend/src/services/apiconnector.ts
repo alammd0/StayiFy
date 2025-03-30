@@ -1,35 +1,28 @@
-// Api connector function here
 import axios from "axios";
 import { BACKEND_URL } from "./backendURL";
 
-// create axios instance
+// Create axios instance
 export const instance = axios.create({
     baseURL: BACKEND_URL + "/api/v1"
-})
+});
 
-// create function to connection
-export const apiConnector = async (url: string, method: string, data: any, headers?: any, params?: any) => {
+// API Connector Function
+export const apiConnector = async (url: string, method: string, data?: any, headers: any = {}) => {
     try {
-
-        console.log("url : " + url);
-        console.log("method : " + method);
-        console.log("data : " + data);
-        console.log("headers : " + headers);
-        console.log("params : " + params);
+        console.log("Making API call to:", url);
+        console.log("Headers being sent:", headers);
 
         const response = await instance({
-            url: url,
-            method: method,
+            url,
+            method,
             data: data || null,
-            headers: headers || null,
-            params: params || null
+            headers: { ...headers },
         });
 
         return response;
-
     }
     catch (err) {
-        console.log(err);
+        console.log("API Error:", err);
         return err;
     }
-}
+};

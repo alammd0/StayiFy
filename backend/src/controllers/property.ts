@@ -1,12 +1,21 @@
 import { Context } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import { createPropertyInput, idSchema } from "@mkadevs/common-app/dist/Validation/property";
-import { error } from "console";
-
+import { z } from "zod";
 interface cloudinaryForm {
     secure_url: string
 }
+
+
+const createPropertyInput = z.object({
+    title: z.string(),
+    description: z.string(),
+    price: z.number(),
+    location: z.string(),
+    image: z.any(),
+    userId: z.number()
+})
+
 
 // Test Done 
 export const createProperty = async (c: Context) => {
@@ -17,6 +26,8 @@ export const createProperty = async (c: Context) => {
     try {
 
         const formData = await c.req.formData();
+
+        console.log("Inside Backend : " + formData)
 
         // Retrieve userId properly
         const user = c.get("user");
@@ -40,58 +51,66 @@ export const createProperty = async (c: Context) => {
             description: formData.get("description") as string,
             price: Number(formData.get("price")),
             location: formData.get("location") as string,
-            image: "",
+            image: formData.get("image") as string,
             userId: userId
         }
+
+        console.log("Property Data : " + propertyData)
 
         // validate input Data
         const { success } = createPropertyInput.safeParse(propertyData);
 
         if (!success) {
             return c.json({
-                message: "Validation Failed",
-                error: createPropertyInput.safeParse(propertyData).error
+                message: "Validation Failed"
             })
         }
 
-        const file = formData.get("image") as File;
+        console.log("Here Image inside Backend :" + formData.get("image"));
 
-        if (!file) {
-            return c.json({
-                message: "Image is required"
-            }, 400)
+        const file = formData.get("image");
+
+        console.log("Received file:", file);
+        console.log("File Type:", typeof file);
+        console.log("Is instance of File:", file instanceof File);
+
+
+        if (!file || !(file instanceof File)) {
+            console.log("Invalid File Data:", file);
+            return c.json({ message: "Invalid image file" }, 400);
         }
 
-        // Prepare Cloudinary upload 
+        // Convert File to Blob
+        const fileBuffer = await file.arrayBuffer();
+        const fileBlob = new Blob([fileBuffer], { type: file.type });
+
         const cloudinaryForm = new FormData();
-        cloudinaryForm.append("file", file);
+        cloudinaryForm.append("file", fileBlob, file.name);
         cloudinaryForm.append("upload_preset", c.env.CLOUDINARY_UPLOAD_PRESET);
         cloudinaryForm.append("api_key", c.env.CLOUDINARY_API_KEY);
 
-
-        const clooudinaryResponse = await fetch(
+        const cloudinaryResponse = await fetch(
             `https://api.cloudinary.com/v1_1/${c.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
-            {
-                method: 'POST',
-                body: cloudinaryForm
-            }
+            { method: "POST", body: cloudinaryForm }
         );
 
-        console.log(clooudinaryResponse)
+        const cloudinaryData: cloudinaryForm = await cloudinaryResponse.json();
+        console.log("Cloudinary Response:", cloudinaryData);
 
-        if (!clooudinaryResponse.ok) {
-            throw new Error('Cloudinary upload failed')
+        if (!cloudinaryResponse.ok) {
+            return c.json({ message: "Cloudinary upload failed", error: cloudinaryData }, 500);
         }
 
-        const cloudinaryData: cloudinaryForm = await clooudinaryResponse.json();
-
-        // console.log("Cloudinary Response : " + cloudinaryData.secure_url);
-
         propertyData.image = cloudinaryData.secure_url;
+
+        if (propertyData.image === null) {
+            return c.json({ message: "Image is required" }, 400);
+        }
 
         const property = await prisma.property.create({
             data: propertyData,
         });
+
 
         return c.json({
             message: "Property created successfully",
@@ -101,7 +120,7 @@ export const createProperty = async (c: Context) => {
     catch (err) {
         console.log(err);
         return c.json({
-            message: "Something went wrong"
+            message: "Something went wrong, creating property",
         }, 500)
     }
 };

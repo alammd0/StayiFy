@@ -4,10 +4,15 @@ import { verify } from "hono/jwt";
 
 
 export const auth = async (c: Context, next: Next) => {
+
+    console.log("Inside Auth Middleware before", c.req.header("Authorization"));
+
     const authHeader = c.req.header("Authorization") || "";
 
+    console.log("Auth Header after : " + authHeader);
+
     if (!authHeader.startsWith("Bearer ")) {
-        return c.json({ message: "Unauthorized" }, 401);
+        return c.json({ message: "Unauthorized Access" }, 401);
     }
 
     const token = authHeader.split(" ")[1];
@@ -32,7 +37,7 @@ export const auth = async (c: Context, next: Next) => {
         return next();
     } catch (err) {
         console.error(err);
-        return c.json({ message: "Unauthorized" }, 401);
+        return c.json({ message: "Unauthorized Access In auth" }, 401);
     }
 };
 
