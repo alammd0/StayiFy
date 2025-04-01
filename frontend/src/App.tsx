@@ -6,11 +6,14 @@ import Profile from "./components/sidebar/Profile";
 import DashboardLayout from "./pages/DashboardLayout";
 import CreateProperty from "./components/sidebar/CreateProperty";
 import MyProperties from "./components/sidebar/MyProperties";
+import MyPropertiesDetails from "./components/sidebar/MyPropertiesDetails";
+import HostRoute from "./components/common/PrivateRoute";
+import Home from "./pages/Home";
 
 function App() {
 
   const location = useLocation();
-  const hideNavbarPart = ["/login", "/signup", "/dashboard/profile", "/dashboard/create-property", "/dashboard/my-properties"];
+  const hideNavbarPart = ["/login", "/signup", "/dashboard/profile", "/dashboard/create-property", "/dashboard/my-properties", "/dashboard/my-booking"];
 
   return (
     <div>
@@ -20,6 +23,7 @@ function App() {
       {/* <Home /> */}
 
       <Routes>
+        <Route path="/" element={<Home />} />
 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
@@ -29,12 +33,12 @@ function App() {
 
           <Route index element={<Navigate to="profile" />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="create-property" element={<CreateProperty />} />
-          <Route path="my-properties" element={<MyProperties />} />
-
+          <Route element={<HostRoute />}>
+            <Route path="create-property" element={<CreateProperty />} />
+            <Route path="my-properties" element={<MyProperties />} />
+            <Route path="my-properties/:id" element={<MyPropertiesDetails />} />
+          </Route>
         </Route>
-
-
       </Routes>
     </div>
   )

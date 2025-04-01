@@ -296,6 +296,11 @@ export const getAllProperty = async (c: Context) => {
                 image: true,
                 price: true,
                 location: true,
+                ratings: true,
+                reviews: true,
+                status: true,
+                createdAt: true,
+                bookings: true,
                 user: {
                     select: {
                         name: true
@@ -358,6 +363,11 @@ export const getPropertyById = async (c: Context) => {
                 image: true,
                 price: true,
                 location: true,
+                ratings: true,
+                reviews: true,
+                status: true,
+                createdAt: true,
+                bookings: true,
                 user: {
                     select: {
                         name: true

@@ -13,7 +13,7 @@ propertyRoutes.get("/my-property", auth, hostRole, getPropertyByUserId);
 
 
 // all route 
-propertyRoutes.get("/all-property", auth, getAllProperty);
-propertyRoutes.get("/propert-detail/:id", auth, getPropertyById);
+propertyRoutes.get("/all-property", getAllProperty);
+propertyRoutes.get("/property-detail/:id", getPropertyById);
 
 export default propertyRoutes;

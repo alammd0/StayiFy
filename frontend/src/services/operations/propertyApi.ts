@@ -81,63 +81,63 @@ export const createProperty = ({ title, description, price, location, image, nav
 
 
 // get all property
-export const getAllProperty = (navigate: any) => {
+export const getAllProperty = () => {
     return async (dispatch: any) => {
-        const toastId = toast.loading("Please wait...");
-        let result = [];
+        const toastId = toast.loading("Please wait..."); 
         dispatch(setLoading(true));
         try {
+
             const response: any = await apiConnector(GET_ALL_PROPERTY_API, "GET", null);
-
             console.log("inside get all property response : ", response.data);
-            console.log("inside get all property response : ", response.data.succes);
 
-            if (!response.data.success) throw new Error(response.data.message);
 
-            result = response.data.data;
+            if (!response.data) throw new Error(response.data.message);
             dispatch(setLoading(false));
-            navigate("/home");
-            toast.success("Get All Property Successfull", { id: toastId });
+            toast.success("Get Property By Id Successful");
+            toast.dismiss(toastId);
+            return response.data;
         }
         catch (err) {
             console.log(err);
-            toast.error("Get All Property Failed", { id: toastId });
+            toast.error("Get Property By Id Failed");
+
             dispatch(setLoading(false));
+            toast.dismiss(toastId);
         }
-        dispatch(setLoading(false));
-        toast.dismiss(toastId);
-        return result;
     }
 }
 
 // get property by id
-export const getPropertyById = (id: any, navigate: any) => {
+export const getPropertyById = (token: string | null, id: Number) => {
     return async (dispatch: any) => {
         const toastId = toast.loading("Please wait...");
-        let result = [];
         dispatch(setLoading(true));
+
         try {
+            const response: any = await apiConnector(`${GET_PROPERTY_BY_ID_API}/${id}`, "GET",
+                null,
+                {
+                    Authorization: `Bearer ${token}`,
+                }
+            );
 
-            const response: any = await apiConnector(`${GET_PROPERTY_BY_ID_API}/${id}`, "GET", null);
             console.log("inside get property by id response : ", response.data);
-            console.log("inside get property by id response : ", response.data.succes);
+            if (!response.data) throw new Error(response.data.message);
 
-            if (!response.data.success) throw new Error(response.data.message);
-            result = response.data.data;
             dispatch(setLoading(false));
-            navigate("/propert-detail/:id");
-            toast.success("Get Property By Id Successfull", { id: toastId });
-        }
-        catch (err) {
+            toast.success("Get Property By Id Successful");
+            toast.dismiss(toastId);
+            return response.data;
+        } catch (err) {
             console.log(err);
-            toast.error("Get Property By Id Failed", { id: toastId });
+            toast.error("Get Property By Id Failed");
+
             dispatch(setLoading(false));
+            toast.dismiss(toastId);
         }
-        dispatch(setLoading(false));
-        toast.dismiss(toastId);
-        return result;
-    }
-}
+    };
+};
+
 
 // update property
 export const updateProperty = (data: any, token: string, navigate: any) => {
@@ -171,12 +171,9 @@ export const updateProperty = (data: any, token: string, navigate: any) => {
     }
 }
 
-
 // delete property
 export const deleteProperty = (id: any, data: any, token: string, navigat: any) => {
     return async (dispatch: any) => {
-
-
 
         const toastId = toast.loading("Please wait...");
         dispatch(setLoading(true));
@@ -209,12 +206,9 @@ export const deleteProperty = (id: any, data: any, token: string, navigat: any) 
     }
 }
 
-
 export const getMypropertyDetails = (token: string | null) => {
     return async (dispatch: any) => {
-
         console.log("token : ", token);
-
         const toastId = toast.loading("Please wait...");
         dispatch(setLoading(true));
         try {
@@ -228,7 +222,6 @@ export const getMypropertyDetails = (token: string | null) => {
             );
 
             if (!response.data) throw new Error(response.data.message);
-
             console.log("Inside property using user iD : " + response);
             dispatch(setDetails(response.data));
             dispatch(setLoading(false));
@@ -236,11 +229,9 @@ export const getMypropertyDetails = (token: string | null) => {
             return response;
         }
         catch (err) {
-
             console.log(err);
             dispatch(setLoading(false));
             toast.error("Get Property By Id Failed");
-
         }
         dispatch(setLoading(false));
         toast.dismiss(toastId);

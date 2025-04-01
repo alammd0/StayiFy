@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from "../../redux/store/app";
 import { useDispatch, useSelector } from "react-redux";
 import { getMypropertyDetails } from "../../services/operations/propertyApi";
 import PropertiesCards from "./PropertiesCards";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const MyProperties = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -53,17 +53,21 @@ const MyProperties = () => {
                         <div className="flex flex-wrap gap-10">
                             {
                                 myProperties.map((property: any) => (
-                                    <PropertiesCards
-                                        key={property.id}
-                                        title={property.title}
-                                        description={property.description}
-                                        price={property.price}
-                                        location={property.location}
-                                        image={property.image}
-                                        rating={property.rating}
-                                        status={property.status}
-                                        createAt={property.createdAt}
-                                    />
+                                    <Link to={`/dashboard/my-properties/${property.id}`}>
+                                        <div key={property.id}>
+                                            <PropertiesCards
+                                                title={property.title}
+                                                description={property.description}
+                                                price={property.price}
+                                                location={property.location}
+                                                image={property.image}
+                                                rating={property.rating}
+                                                status={property.status}
+                                                createAt={property.createdAt}
+                                            />
+                                        </div>
+                                    </Link>
+
                                 ))
                             }
                         </div>

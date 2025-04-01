@@ -17,14 +17,15 @@ interface PropertiesCardsProps {
 const PropertiesCards = ({ title, description, image, price, location, rating, createAt, status }: PropertiesCardsProps) => {
 
     return (
-        <div className="max-w-[320px] mx-auto bg-slate-600 p-4 border-2 border-slate-400 rounded-lg shadow-xl flex flex-col gap-2">
-            <div className="rounded-xl h-[260px]">
+        <div className="max-w-[320px] w-full h-full mx-auto bg-slate-600 p-4 border-2 border-slate-400 rounded-lg shadow-xl flex flex-col gap-2
+         transform hover:scale-105 transition duration-300 hover:shadow-slate-900 hover:shadow-2xs">
+            <div className="rounded-xl h-[300px] w-full">
                 <img className="rounded-lg h-full w-full" src={image} alt="" />
             </div>
 
             <div className="text-slate-200 pl-1 pr-1">
                 <div className="flex justify-between items-center ">
-                    <h1 className="text-lg font-semibold text-slate-200">{title}</h1>
+                    <h1 className="text-lg font-semibold text-slate-200 hover:underline">{title}</h1>
                     <p className="flex items-center text-sm justify-center gap-1"> <IoIosStar /> {rating && rating.length !== 0 ? rating : 12}</p>
                 </div>
 

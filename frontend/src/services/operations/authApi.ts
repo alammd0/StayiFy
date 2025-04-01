@@ -96,7 +96,7 @@ export const login = ({ email, password, navigate }: loginInput) => {
 
             toast.dismiss(toastId);
             toast.success("LoginSuccessful");
-            navigate("/home");
+            navigate("/");
         }
         catch (err) {
             console.log(err);
@@ -114,6 +114,6 @@ export const logout = (navigate: any) => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         toast.success("Logout Successfull");
-        navigate("/login");
+        navigate("/");
     }
 }
