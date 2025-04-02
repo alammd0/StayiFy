@@ -12,7 +12,9 @@
     "CLOUDINARY_CLOUD_NAME": "dfcr29a7r",
     "CLOUDINARY_API_KEY": "459815643398939",
     "CLOUDINARY_API_SECRET": "R6FzT8dees7GLMI5SY9lForThfU",
-    "CLOUDINARY_UPLOAD_PRESET": "property_uploads"
+    "CLOUDINARY_UPLOAD_PRESET": "property_uploads",
+    "RAZORPAY_KEY_ID": "rzp_test_iW9xjCLsefmddP",
+    "RAZORPAY_KEY_SECRET": "DIG3R36hdhFDKUAQms42IFJp"
   },
   // "compatibility_flags": [
   //   "nodejs_compat"
