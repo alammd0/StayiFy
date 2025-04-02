@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import { RootState } from "../../redux/store/app";
 
-const HostRoute = () => {
+const OpenRoute = () => {
     const token = useSelector((state: RootState) => state.auth.token);
     const user = useSelector((state: any) => state.auth.user);
     console.log(user.accountType);
@@ -10,4 +10,4 @@ const HostRoute = () => {
     return token && user.accountType === "USER" ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
-export default HostRoute;
+export default OpenRoute;

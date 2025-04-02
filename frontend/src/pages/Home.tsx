@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { getAllProperty } from "../services/operations/propertyApi";
 import PropertiesCards from "../components/sidebar/PropertiesCards";
 import { Link } from "react-router-dom";
+import Footer from "../components/core/Footer";
 
 const Home = () => {
 
@@ -43,7 +44,7 @@ const Home = () => {
                             <div className="flex flex-wrap gap-10 justify-center">
                                 {
                                     allProperty.map((property: any) => (
-                                        <Link to={`/propertie/${property.id}`}>
+                                        <Link to={`/property/${property.id}`}>
                                             <div key={property.id} className="w-full h-full">
                                                 <PropertiesCards
                                                     title={property.title}
@@ -67,7 +68,10 @@ const Home = () => {
                     }
                 </div>
 
+            </div>
 
+            <div>
+                <Footer/>
             </div>
 
         </div>

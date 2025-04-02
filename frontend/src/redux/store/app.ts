@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../slices/authSlice";
 import propertyReducer from "../slices/propertySlice";
 import propertyDetaReducer from "../slices/myProperty"
+import cartReducer from "../slices/cartSlice"
 
 const loadState = () => {
     try {
@@ -31,7 +32,8 @@ export const store = configureStore(
             // @ts-ignore
             auth: authReducer,
             property: propertyReducer,
-            details: propertyDetaReducer
+            details: propertyDetaReducer,
+            cart: cartReducer
         },
 
         preloadedState: loadState(),

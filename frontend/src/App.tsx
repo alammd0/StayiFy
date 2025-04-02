@@ -9,6 +9,9 @@ import MyProperties from "./components/sidebar/MyProperties";
 import MyPropertiesDetails from "./components/sidebar/MyPropertiesDetails";
 import HostRoute from "./components/common/PrivateRoute";
 import Home from "./pages/Home";
+import OpenRoute from "./components/common/OpenRoute";
+import Booking from "./components/home/Booking";
+import Cart from "./components/core/Cart";
 
 function App() {
 
@@ -33,12 +36,25 @@ function App() {
 
           <Route index element={<Navigate to="profile" />} />
           <Route path="profile" element={<Profile />} />
+
           <Route element={<HostRoute />}>
             <Route path="create-property" element={<CreateProperty />} />
             <Route path="my-properties" element={<MyProperties />} />
             <Route path="my-properties/:id" element={<MyPropertiesDetails />} />
           </Route>
+
+          <Route element={<OpenRoute />}>
+            <Route path="my-booking" element={<Booking />} />
+          </Route>
+
         </Route>
+
+        <Route element={<OpenRoute />}>
+          <Route path="/property/:id" element={<MyPropertiesDetails />} />
+          <Route path="/property/:id/cart" element={<Cart />} />
+        </Route>
+
+
       </Routes>
     </div>
   )
