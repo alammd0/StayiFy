@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,57 +14,56 @@ model User {
   name        String?
   phoneNumber String?
   password    String
-  properties  Property[]
-  reviews     Review[]
-  bookings    Booking[]
   accountType AccountType @default(USER)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  bookings    Booking[]
+  properties  Property[]
+  reviews     Review[]
 }
 
 model Property {
   id          Int            @id @default(autoincrement())
   title       String
   description String
-  image       String
   price       Int
   location    String
   userId      Int
-  user        User           @relation(fields: [userId], references: [id])
   createdAt   DateTime       @default(now())
   ratings     Float?         @default(0.0)
-  reviews     Review[]
-  bookings    Booking[]
   status      PropertyStatus @default(AVAILABLE)
   updatedAt   DateTime       @updatedAt
+  image       String
+  bookings    Booking[]
+  user        User           @relation(fields: [userId], references: [id])
+  reviews     Review[]
 }
 
 model Review {
   id         Int      @id @default(autoincrement())
   propertyId Int
-  property   Property @relation(fields: [propertyId], references: [id])
   rating     Float
   comment    String
   userId     Int
-  user       User     @relation(fields: [userId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  property   Property @relation(fields: [propertyId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Booking {
   id         Int           @id @default(autoincrement())
   propertyId Int
-  property   Property      @relation(fields: [propertyId], references: [id])
   userId     Int
-  user       User          @relation(fields: [userId], references: [id])
   startDate  DateTime
   endDate    DateTime
-  price      Int
-  tolaPrice  Int?
-  status     BookingStatus @default(PENDING)
-  paymentId  String?
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
+  paymentId  String?
+  status     BookingStatus @default(PENDING)
+  price      Int
+  property   Property      @relation(fields: [propertyId], references: [id])
+  user       User          @relation(fields: [userId], references: [id])
 }
 
 enum PropertyStatus {

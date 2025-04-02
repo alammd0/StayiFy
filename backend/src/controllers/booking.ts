@@ -8,9 +8,8 @@ import crypto from "crypto";
 const bookingSchema = z.object({
     userId: z.number(),
     propertyId: z.number(),
-    price: z.number().min(1, "Price must be greater than 0"),
     totalPrice: z.number(),
-    startDate: z.string(), // Changed to string, since JSON doesn't support Date format
+    startDate: z.string(),
     endDate: z.string(),
 });
 
@@ -30,7 +29,7 @@ export const createBooking = async (c: Context) => {
             }, 400);
         }
 
-        const { userId, propertyId, price, totalPrice, startDate, endDate } = validation.data;
+        const { userId, propertyId, totalPrice, startDate, endDate } = validation.data;
 
         // Initialize Razorpay instance
         const razorpay = new Razorpay({
@@ -40,7 +39,7 @@ export const createBooking = async (c: Context) => {
 
         // Create Order in Razorpay
         const options = {
-            amount: price * 100,
+            amount: totalPrice * 100,
             currency: "INR",
             receipt: `receipt_${Date.now()}`,
             payment_capture: 1,
@@ -54,8 +53,7 @@ export const createBooking = async (c: Context) => {
                 propertyId,
                 startDate: new Date(startDate),
                 endDate: new Date(endDate),
-                price,
-                tolaPrice: totalPrice,
+                price: totalPrice,
                 paymentId: order.id,
                 status: "PENDING",
             }
@@ -81,7 +79,11 @@ export const verifyPayment = async (c: Context) => {
     }).$extends(withAccelerate());
 
     try {
-        const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = await c.req.json();
+        const { razorpayOrderId, razorpayPaymentId, razorpaySignature } = await c.req.json();
+
+        console.log("Received Payment ID:", razorpayPaymentId);
+        console.log("Received Order ID:", razorpayOrderId);
+        console.log("Received Signature:", razorpaySignature);
 
         if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
             return c.json({
@@ -133,10 +135,39 @@ export const getBookingProperty = async (c: Context) => {
     });
 
     try {
-        const bookings = await prisma.booking.findMany(); // Adjust table name accordingly
-        return c.json({ success: true, data: bookings });
+
+        const body = await c.req.json();
+
+        const { userId } = body
+
+        const bookings = await prisma.booking.findFirst({
+            where: {
+                userId: userId
+            },
+
+            include: {
+                property: true,
+                user: true
+            }
+        })
+
+        if (!bookings) {
+            return c.json({
+                message: "No bookings found"
+            }, 404);
+        }
+
+        return c.json({
+            message: "Bookings fetched successfully",
+            data: bookings
+        }, 200);
+        
+
     } catch (error) {
-        return c.json({ success: false }, 500);
+        console.error("Error fetching bookings:", error);
+        return c.json({
+            message: "Failed to fetch bookings",
+        }, 500);
     } finally {
         await prisma.$disconnect();
     }

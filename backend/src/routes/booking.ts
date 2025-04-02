@@ -6,6 +6,6 @@ const bookingRoute = new Hono();
 
 bookingRoute.post("/create-booking", auth, createBooking);
 bookingRoute.post("/verify-payment", auth, verifyPayment);
-bookingRoute.post("/get-booking", auth, getBookingProperty);
+bookingRoute.get("/get-booking", auth, getBookingProperty);
 
 export default bookingRoute;

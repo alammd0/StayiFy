@@ -4,6 +4,7 @@ import propertyReducer from "../slices/propertySlice";
 import propertyDetaReducer from "../slices/myProperty"
 import cartReducer from "../slices/cartSlice"
 
+
 const loadState = () => {
     try {
         const savedState = localStorage.getItem("reduxState");
@@ -37,6 +38,7 @@ export const store = configureStore(
         },
 
         preloadedState: loadState(),
+
     }
 )
 

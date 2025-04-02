@@ -30,7 +30,7 @@ const propertySlice = createSlice({
         setProperty(state, action: PayloadAction<any>) {
             state.properties = action.payload
         },
-
+        
         setUpdatedProperty(state, action: PayloadAction<any>) {
             state.properties = state.properties.map((property: any) => {
                 if (property.id === action.payload.id) {

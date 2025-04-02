@@ -1,0 +1,175 @@
+import { toast } from "react-hot-toast";
+import { setLoading } from "../../redux/slices/authSlice";
+import { apiConnector } from "../apiconnector";
+import { bookingEndpoints } from "../../services/apis";
+
+const {
+    CREATE_BOOKING_API,
+    VERIFY_PAYMENT_API,
+    GET_BOOKING_API,
+} = bookingEndpoints;
+
+type FormData = {
+    userId: number;
+    propertyId: number;
+    totalPrice: number;
+    startDate: Date | string;
+    endDate: Date | string;
+    token: string;
+    navigate: (path: string) => void;
+};
+
+
+function loadScript(src: string) {
+    return new Promise((resolve) => {
+        const script = document.createElement("script");
+        script.src = src;
+
+        script.onload = () => {
+            resolve(true);
+        };
+        script.onerror = () => {
+            resolve(false);
+        };
+        document.body.appendChild(script);
+    });
+}
+
+// Booking Function
+export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDate, token, navigate }: FormData) =>
+    async (dispatch: any) => {
+        const toastId = toast.loading("Please wait...");
+        dispatch(setLoading(true));
+
+        try {
+
+            console.log("Total price:", totalPrice);
+
+            // Format Dates
+            const formattedStartDate = typeof startDate === "string" ? startDate : startDate.toISOString().split("T")[0];
+            const formattedEndDate = typeof endDate === "string" ? endDate : endDate.toISOString().split("T")[0];
+
+            console.log("Formatted Start Date:", formattedStartDate);
+            console.log("Formatted End Date:", formattedEndDate);
+
+            // Load Razorpay SDK
+            const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+            if (!res) {
+                toast.error("Razorpay SDK failed to load. Are you online?");
+                return;
+            }
+
+            // Send Booking Request to Backend
+            const response: any = await apiConnector(
+                CREATE_BOOKING_API,
+                "POST",
+                {
+                    userId,
+                    propertyId,
+                    totalPrice: totalPrice,
+                    startDate: formattedStartDate,
+                    endDate: formattedEndDate,
+                },
+                {
+                    Authorization: `Bearer ${token}`,
+                }
+            );
+
+            console.log("API Response:", response.data);
+
+            // Validate API Response
+            if (!response.data || !response.data.orderId) {
+                throw new Error("Invalid response from server. Order ID missing.");
+            }
+
+            console.log("Booking Created Successfully:", response.data.data);
+
+            // Extract payment details safely
+            const { orderId } = response.data || {};
+            console.log("Order ID:", orderId);
+            const { price } = response.data.data || {};
+            console.log("Tola Price:", price);
+
+            if (!price || !orderId) {
+                throw new Error("Invalid payment data received from server.");
+            }
+
+            // Setup Razorpay payment options
+            const options = {
+                key: "rzp_test_iW9xjCLsefmddP",
+                currency: "INR",
+                amount: `${price * 100}`,
+                order_id: `${orderId}`,
+                name: "Stayify",
+                description: "Thank You for your order",
+                handler: async (paymentResponse: any) => {
+                    // Verify Payment
+                    const verifyResponse: any = await apiConnector(
+                        VERIFY_PAYMENT_API,
+                        "POST",
+                        {
+                            razorpayOrderId: orderId,
+                            razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                            razorpaySignature: paymentResponse.razorpay_signature,
+                        },
+                        {
+                            Authorization: `Bearer ${token}`,
+                        }
+                    );
+
+                    console.log("Payment Verification Response:", verifyResponse.data);
+
+                    if (!verifyResponse.data) {
+                        throw new Error(verifyResponse.data.message);
+                    }
+
+                    // Redirect to Bookings Page
+                    toast.success("Payment Successful");
+                    navigate("/dashboard/my-booking");
+                },
+            };
+
+            // Open Razorpay Payment Window
+            const rzp = new (window as any).Razorpay(options);
+            rzp.open();
+        } catch (err: any) {
+            console.error("Error:", err.message);
+            toast.error(err.message || "Payment Failed");
+        } finally {
+            dispatch(setLoading(false));
+            toast.dismiss(toastId);
+        }
+    };
+
+
+// Get all bookings for a user
+export const getBooking = async (token: string) => {
+    return async (dispatch: any) => {
+        const toastId = toast.loading("Please wait...");
+        dispatch(setLoading(true));
+
+        try {
+
+            const response: any = await apiConnector(
+                "GET",
+                GET_BOOKING_API,
+                {},
+                {
+                    Authorization: `Bearer ${token}`,
+                }
+            );
+
+            if (!response.data.success) {
+                throw new Error(response.data.message);
+            }
+
+            return response.data.message;
+        } catch (err: any) {
+            console.error(err);
+            toast.error(err.message || "Failed to fetch bookings", { id: toastId });
+        } finally {
+            dispatch(setLoading(false));
+            toast.dismiss(toastId);
+        }
+    };
+}

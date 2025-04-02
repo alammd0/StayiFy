@@ -1,8 +1,12 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdCurrencyRupee } from "react-icons/md";
 import { useState, useMemo } from "react";
 import DatePickerModal from "../common/DatePickerModal";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { AppDispatch } from "../../redux/store/app";
+import { createBooking } from "../../services/operations/booking";
+
 
 const Cart = () => {
     const cartItem = useSelector((state: any) => state.cart.cart);
@@ -11,6 +15,14 @@ const Cart = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
+
+    const token = useSelector((state: any) => state.auth.token);
+    console.log("token Cart Page:", token);
+
+    const { id } = useSelector((state: any) => state.auth.user);
+    console.log("user Cart Page:", id);
+
+    const dispatch: AppDispatch = useDispatch();
 
     // Calculate total days dynamically using useMemo
     const totalDays = useMemo(() => {
@@ -22,6 +34,31 @@ const Cart = () => {
     }, [startDate, endDate]);
 
     console.log("Total Days:", totalDays);
+
+
+    function handlePayment(propertyId: number, amount: number) {
+        if (!startDate || !endDate) {
+            toast.error("Please select check-in and check-out dates");
+            return;
+        }
+
+        console.log("Click before dispatch");
+
+        // Dispatch the createBooking action with the required object
+        dispatch(
+            createBooking({
+                userId: id,
+                propertyId,
+                totalPrice: amount,
+                startDate,
+                endDate,
+                token,
+                navigate,
+            }) as any
+        );
+
+        console.log("Click after dispatch");
+    }
 
     return (
         <div>
@@ -76,7 +113,11 @@ const Cart = () => {
                                     Total Price: <MdCurrencyRupee className="mx-1" /> {item?.price * totalDays}
                                 </p>
 
-                                <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+                                <button
+
+                                    onClick={() => handlePayment(item.id, item.price * totalDays)}
+
+                                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
                                     Book Now
                                 </button>
                             </div>

@@ -17,3 +17,11 @@ export const propertyEndpoints = {
     DELETE_PROPERTY_API: `${BACKEND_URL}/api/v1/property/delete-property`,
     PROPERTY_DETAILS_BY_USERID: `${BACKEND_URL}/api/v1/property/my-property`
 }
+
+
+// booking endpoints
+export const bookingEndpoints = {
+    CREATE_BOOKING_API: `${BACKEND_URL}/api/v1/booking/create-booking`,
+    VERIFY_PAYMENT_API: `${BACKEND_URL}/api/v1/booking/verify-payment`,
+    GET_BOOKING_API: `${BACKEND_URL}/api/v1/booking/get-booking`
+}
