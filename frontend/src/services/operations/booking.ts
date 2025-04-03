@@ -2,6 +2,7 @@ import { toast } from "react-hot-toast";
 import { setLoading } from "../../redux/slices/authSlice";
 import { apiConnector } from "../apiconnector";
 import { bookingEndpoints } from "../../services/apis";
+import { setBookings } from "../../redux/slices/bookingSlice";
 
 const {
     CREATE_BOOKING_API,
@@ -84,6 +85,8 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
 
             console.log("Booking Created Successfully:", response.data.data);
 
+            dispatch(setBookings(response.data.data));
+
             // Extract payment details safely
             const { orderId } = response.data || {};
             console.log("Order ID:", orderId);
@@ -125,7 +128,7 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
 
                     // Redirect to Bookings Page
                     toast.success("Payment Successful");
-                    navigate("/dashboard/my-booking");
+                    navigate(`/dashboard/my-booking/${userId}`);
                 },
             };
 
@@ -143,33 +146,50 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
 
 
 // Get all bookings for a user
-export const getBooking = async (token: string) => {
+export const getBooking = (token: string, userId: number) => {
+
     return async (dispatch: any) => {
-        const toastId = toast.loading("Please wait...");
+
+        const toastid = toast.loading("Loading...");
         dispatch(setLoading(true));
 
         try {
 
+            if (!token) {
+                throw new Error("Token is required");
+            }
+
+            if (!userId) {
+                throw new Error("Booking ID is required");
+            }
+
+            console.log("Fetching booking with token:", token);
+            console.log("API URL:", `${GET_BOOKING_API}/${userId}`);
+
             const response: any = await apiConnector(
+                `${GET_BOOKING_API}/${userId}`,
                 "GET",
-                GET_BOOKING_API,
-                {},
+                null,
                 {
                     Authorization: `Bearer ${token}`,
                 }
             );
 
-            if (!response.data.success) {
-                throw new Error(response.data.message);
-            }
 
-            return response.data.message;
-        } catch (err: any) {
-            console.error(err);
-            toast.error(err.message || "Failed to fetch bookings", { id: toastId });
-        } finally {
+            console.log("Response:", response.data.data);
+
+            if (!response.data) throw new Error(response.data.message);
+
             dispatch(setLoading(false));
-            toast.dismiss(toastId);
+            toast.success("Booking fetched successfully");
+            return response.data;
+
         }
-    };
+        catch (err) {
+            console.log(err);
+            toast.error("Error fetching booking details");
+        }
+        dispatch(setLoading(false));
+        toast.dismiss(toastid);
+    }
 }

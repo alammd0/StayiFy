@@ -135,14 +135,14 @@ export const getBookingProperty = async (c: Context) => {
     });
 
     try {
+        const userId = c.req.param("userId");
 
-        const body = await c.req.json();
+        console.log("Received headers:", c.req.header);
 
-        const { userId } = body
 
-        const bookings = await prisma.booking.findFirst({
+        const bookings = await prisma.booking.findMany({
             where: {
-                userId: userId
+                userId: Number(userId)
             },
 
             include: {
@@ -161,7 +161,7 @@ export const getBookingProperty = async (c: Context) => {
             message: "Bookings fetched successfully",
             data: bookings
         }, 200);
-        
+
 
     } catch (error) {
         console.error("Error fetching bookings:", error);
@@ -172,3 +172,31 @@ export const getBookingProperty = async (c: Context) => {
         await prisma.$disconnect();
     }
 };
+
+export const deleteBookinProperty = async (c: Context) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    });
+
+    try {
+
+        const userId = c.req.param("userId");
+
+        await prisma.booking.deleteMany({
+            where: {
+                userId: Number(userId)
+            }
+        })
+
+        return c.json({
+            message: "Bookings deleted successfully"
+        }, 200);
+
+    }
+    catch (err) {
+        console.log("Error deleting booking:", err);
+        return c.json({
+            message: "Failed to delete booking"
+        }, 400)
+    }
+}

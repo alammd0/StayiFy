@@ -55,7 +55,7 @@ const Sidebar = () => {
                     user.accountType === "USER" && (
                         <>
                             <div className={`text-lg font-semibold text-slate-300 ${active === "/dashboard/my-booking" && "bg-slate-400 text-slate-600 pl-3 px-1 py-1 rounded-sm"}`} >
-                                <Link to="/dashboard/my-booking" onClick={() => setActive("/dashboard/my-booking")}>My Booking</Link>
+                                <Link to={`/dashboard/my-booking/${user.id}`} onClick={() => setActive("/dashboard/my-booking")}>My Booking</Link>
                             </div>
                         </>
                     )

@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { MdCurrencyRupee } from "react-icons/md";
 import { useState, useMemo } from "react";
-import DatePickerModal from "../common/DatePickerModal";
+import DatePickerModal from "../../common/DatePickerModal";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { AppDispatch } from "../../redux/store/app";
-import { createBooking } from "../../services/operations/booking";
+import { AppDispatch } from "../../../redux/store/app";
+import { createBooking } from "../../../services/operations/booking";
 
 
 const Cart = () => {

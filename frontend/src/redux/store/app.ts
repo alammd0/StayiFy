@@ -3,6 +3,7 @@ import authReducer from "../slices/authSlice";
 import propertyReducer from "../slices/propertySlice";
 import propertyDetaReducer from "../slices/myProperty"
 import cartReducer from "../slices/cartSlice"
+import bookingReducer from "../slices/bookingSlice"
 
 
 const loadState = () => {
@@ -34,7 +35,8 @@ export const store = configureStore(
             auth: authReducer,
             property: propertyReducer,
             details: propertyDetaReducer,
-            cart: cartReducer
+            cart: cartReducer,
+            booking: bookingReducer
         },
 
         preloadedState: loadState(),
