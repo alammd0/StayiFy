@@ -30,7 +30,6 @@ model Property {
   location    String
   userId      Int
   createdAt   DateTime       @default(now())
-  ratings     Float?         @default(0.0)
   status      PropertyStatus @default(AVAILABLE)
   updatedAt   DateTime       @updatedAt
   image       String

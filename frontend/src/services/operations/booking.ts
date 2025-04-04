@@ -154,18 +154,6 @@ export const getBooking = (token: string, userId: number) => {
         dispatch(setLoading(true));
 
         try {
-
-            if (!token) {
-                throw new Error("Token is required");
-            }
-
-            if (!userId) {
-                throw new Error("Booking ID is required");
-            }
-
-            console.log("Fetching booking with token:", token);
-            console.log("API URL:", `${GET_BOOKING_API}/${userId}`);
-
             const response: any = await apiConnector(
                 `${GET_BOOKING_API}/${userId}`,
                 "GET",

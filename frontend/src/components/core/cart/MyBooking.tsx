@@ -78,6 +78,8 @@ const MyBooking = () => {
                                             property={property.property}
                                             user={property.user}
                                             price={property.price}
+                                            propertyId={property.propertyId}
+                                            userId={property.userId}
                                         />
                                     </div>
 
@@ -97,7 +99,7 @@ const MyBooking = () => {
                     </Link>
                 </div>
             </div >
-        ) 
+        )
     }
 
 

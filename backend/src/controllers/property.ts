@@ -6,7 +6,6 @@ interface cloudinaryForm {
     secure_url: string
 }
 
-
 const createPropertyInput = z.object({
     title: z.string(),
     description: z.string(),
@@ -296,7 +295,6 @@ export const getAllProperty = async (c: Context) => {
                 image: true,
                 price: true,
                 location: true,
-                ratings: true,
                 reviews: true,
                 status: true,
                 createdAt: true,
@@ -363,7 +361,6 @@ export const getPropertyById = async (c: Context) => {
                 image: true,
                 price: true,
                 location: true,
-                ratings: true,
                 reviews: true,
                 status: true,
                 createdAt: true,

@@ -45,7 +45,6 @@ const CreateProperty = () => {
             if (fileInput.files && fileInput.files.length > 0) {
                 setPropertyData({ ...propertyData, image: fileInput.files[0] });
 
-
                 // Show preview	
                 const reader = new FileReader();
                 reader.onload = () => {

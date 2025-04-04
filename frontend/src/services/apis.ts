@@ -25,3 +25,9 @@ export const bookingEndpoints = {
     VERIFY_PAYMENT_API: `${BACKEND_URL}/api/v1/booking/verify-payment`,
     GET_BOOKING_API: `${BACKEND_URL}/api/v1/booking/get-booking`
 }
+
+// rating endpoints
+export const ratingandreviewEndpoints = {
+    CREATE_RATING_API: `${BACKEND_URL}/api/v1/rating/create-rating`,
+    GET_ALL_RATING_API: `${BACKEND_URL}/api/v1/rating/get-rating`
+}
