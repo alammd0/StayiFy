@@ -22,9 +22,7 @@ const CreateProperty = () => {
     console.log("token Creation From:", token);
 
     const [dragActive, setDragActive] = useState(false);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
-
 
     const isEditMode = !!id;
 
@@ -41,23 +39,20 @@ const CreateProperty = () => {
 
         if (type === "file") {
             const fileInput = e.target as HTMLInputElement;
-            console.log(fileInput.files);
             if (fileInput.files && fileInput.files.length > 0) {
-                setPropertyData({ ...propertyData, image: fileInput.files[0] });
+                const file = fileInput.files[0];
+                setPropertyData({ ...propertyData, image: file });
 
-                // Show preview	
                 const reader = new FileReader();
                 reader.onload = () => {
                     setPreview(reader.result as string);
                 };
-                reader.readAsDataURL(fileInput.files[0]);
-
+                reader.readAsDataURL(file);
             }
         } else {
             setPropertyData({ ...propertyData, [name]: value });
         }
     };
-
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -69,13 +64,14 @@ const CreateProperty = () => {
 
         console.log("Submitting property:", propertyData);
 
-        dispatch(createProperty({
-            ...propertyData,
-            navigate,
-            token
-        }));
+        dispatch(
+            createProperty({
+                ...propertyData,
+                navigate,
+                token,
+            })
+        );
     };
-
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -92,10 +88,8 @@ const CreateProperty = () => {
 
         const file = e.dataTransfer.files[0];
         if (file && file.type.startsWith("image/")) {
-            setSelectedFile(file);
             setPropertyData({ ...propertyData, image: file });
 
-            // Show preview
             const reader = new FileReader();
             reader.onload = () => {
                 setPreview(reader.result as string);
@@ -108,7 +102,6 @@ const CreateProperty = () => {
 
     return (
         <div className="flex flex-col gap-5">
-
             <div className="text-lg font-semibold text-slate-300 tracking-[0.09em] font-stretch-extra-condensed">
                 {locations.pathname}
             </div>
@@ -118,9 +111,11 @@ const CreateProperty = () => {
             </div>
 
             <div className="pl-8 max-w-[980px] mx-auto w-full">
-                <form onSubmit={handleSubmit} className="pl-14 flex flex-col gap-4" >
+                <form onSubmit={handleSubmit} className="pl-14 flex flex-col gap-4">
                     <label className="flex flex-col gap-2">
-                        <p className=" text-lg text-slate-900 font-semibold">Property Title : <sup className="text-red-600">*</sup></p>
+                        <p className="text-lg text-slate-900 font-semibold">
+                            Property Title : <sup className="text-red-600">*</sup>
+                        </p>
                         <input
                             type="text"
                             name="title"
@@ -132,7 +127,9 @@ const CreateProperty = () => {
                     </label>
 
                     <label className="flex flex-col gap-2">
-                        <p className=" text-lg text-slate-900 font-semibold" >Description : <sup>*</sup></p>
+                        <p className="text-lg text-slate-900 font-semibold">
+                            Description : <sup>*</sup>
+                        </p>
                         <textarea
                             name="description"
                             rows={8}
@@ -143,7 +140,6 @@ const CreateProperty = () => {
                         />
                     </label>
 
-                    {/* Image */}
                     <label className="flex flex-col gap-2">
                         <p className="text-lg text-slate-900 font-semibold">
                             Image: <sup className="text-red-500">*</sup>
@@ -164,7 +160,8 @@ const CreateProperty = () => {
                                 />
                             ) : (
                                 <p className="text-gray-600 text-sm">
-                                    Drag & drop an image here or <span className="text-blue-500 font-semibold">browse</span>
+                                    Drag & drop an image here or{" "}
+                                    <span className="text-blue-500 font-semibold">browse</span>
                                 </p>
                             )}
                         </div>
@@ -179,10 +176,10 @@ const CreateProperty = () => {
                         />
                     </label>
 
-                    {/* <FileUpload handleFileChange={handleChange} /> */}
-
                     <label className="flex flex-col gap-2">
-                        <p className=" text-lg text-slate-900 font-semibold">Price : <sup>*</sup></p>
+                        <p className="text-lg text-slate-900 font-semibold">
+                            Price : <sup>*</sup>
+                        </p>
                         <input
                             type="number"
                             name="price"
@@ -194,7 +191,9 @@ const CreateProperty = () => {
                     </label>
 
                     <label className="flex flex-col gap-2">
-                        <p className=" text-lg text-slate-900 font-semibold">Location : <sup>*</sup></p>
+                        <p className="text-lg text-slate-900 font-semibold">
+                            Location : <sup>*</sup>
+                        </p>
                         <input
                             type="text"
                             name="location"
