@@ -15,7 +15,7 @@ const {
     PROPERTY_DETAILS_BY_USERID
 } = propertyEndpoints
 
-interface SignupParams {
+interface createPropertyParams {
     title: string;
     description: string;
     price: number;
@@ -27,7 +27,7 @@ interface SignupParams {
 
 
 // create property(Uses)
-export const createProperty = ({ title, description, price, location, image, navigate, token }: SignupParams) => {
+export const createProperty = ({ title, description, price, location, image, navigate, token }: createPropertyParams) => {
     return async (dispatch: any) => {
 
         if (!token) {
@@ -63,7 +63,7 @@ export const createProperty = ({ title, description, price, location, image, nav
                 }
             );
 
-            console.log("response:", response?.data);
+            console.log("response iside create property:", response?.data);
 
             if (!response.data) throw new Error(response.data);
             dispatch(setProperty(response.data.data));
@@ -83,32 +83,29 @@ export const createProperty = ({ title, description, price, location, image, nav
 // get all property
 export const getAllProperty = () => {
     return async (dispatch: any) => {
-        const toastId = toast.loading("Please wait..."); 
+        const toastId = toast.loading("Please wait...");
         dispatch(setLoading(true));
         try {
 
             const response: any = await apiConnector(GET_ALL_PROPERTY_API, "GET", null);
-            console.log("inside get all property response : ", response.data);
-
 
             if (!response.data) throw new Error(response.data.message);
             dispatch(setLoading(false));
-            toast.success("Get Property By Id Successful");
             toast.dismiss(toastId);
+            toast.success("Get Property By Id Successful");
             return response.data;
         }
         catch (err) {
             console.log(err);
-            toast.error("Get Property By Id Failed");
-
-            dispatch(setLoading(false));
             toast.dismiss(toastId);
+            toast.error("Get Property By Id Failed");
+            dispatch(setLoading(false));
         }
     }
 }
 
 // get property by id
-export const getPropertyById = (token: string | null, id: Number) => {
+export const getPropertyById = (id: number, token: string) => {
     return async (dispatch: any) => {
         const toastId = toast.loading("Please wait...");
         dispatch(setLoading(true));
@@ -121,9 +118,7 @@ export const getPropertyById = (token: string | null, id: Number) => {
                 }
             );
 
-            console.log("inside get property by id response : ", response.data);
             if (!response.data) throw new Error(response.data.message);
-
             dispatch(setLoading(false));
             toast.success("Get Property By Id Successful");
             toast.dismiss(toastId);
@@ -131,34 +126,35 @@ export const getPropertyById = (token: string | null, id: Number) => {
         } catch (err) {
             console.log(err);
             toast.error("Get Property By Id Failed");
-
             dispatch(setLoading(false));
             toast.dismiss(toastId);
         }
     };
 };
 
-
 // update property
-export const updateProperty = (data: any, token: string, navigate: any) => {
+export const updateProperty = (token: string, id: number, propertyData: any, navigate: any) => {
+
+    // console.log("inside api : ", number(id))
+
     return async (dispatch: any) => {
+
         const toastId = toast.loading("Please wait...");
         dispatch(setLoading(true));
         try {
-            const response: any = await apiConnector(UPDATE_PROPERTY_API, "PUT", data, {
-                headers: {
-                    authorization: `Bearer ${token}`
+            const response: any = await apiConnector(`${UPDATE_PROPERTY_API}/${id}`, "PUT", propertyData,
+                {
+                    Authorization: `Bearer ${token}`
                 }
-            })
+            )
 
             console.log("response inside update course : " + response.data);
-            console.log("Success reponse inside update course : " + response.data.succes);
 
             if (!response.data.success) throw new Error(response.data.message);
 
             dispatch(setUpdatedProperty(response.data.data));
             dispatch(setLoading(false));
-            navigate("/all-property");
+            navigate("/dashboard/my-properties");
             toast.success("Update Property Successfull", { id: toastId });
         }
         catch (err) {
@@ -222,7 +218,6 @@ export const getMypropertyDetails = (token: string | null) => {
             );
 
             if (!response.data) throw new Error(response.data.message);
-            console.log("Inside property using user iD : " + response);
             dispatch(setDetails(response.data));
             dispatch(setLoading(false));
             toast.success("Get Property By Id Successfull");

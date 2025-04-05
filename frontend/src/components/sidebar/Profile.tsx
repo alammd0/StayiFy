@@ -14,7 +14,6 @@ const Profile = () => {
 
     return (
         <div className="flex flex-col gap-5">
-
             <div className="text-lg font-semibold text-slate-300 tracking-[0.09em] font-stretch-extra-condensed">
                 {location.pathname}
             </div>

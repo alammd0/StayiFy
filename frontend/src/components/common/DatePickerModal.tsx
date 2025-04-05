@@ -26,7 +26,7 @@ const DatePickerModal = ({ onClose, startDate, setStartDate, endDate, setEndDate
             <label className="text-xs text-gray-500">CHECKOUT</label>
             <DatePicker
               selected={endDate}
-              onChange={(date) => setEndDate(date)}
+              onChange={(date) => setEndDate(date || null)}
               selectsEnd
               startDate={startDate}
               endDate={endDate}
@@ -42,7 +42,7 @@ const DatePickerModal = ({ onClose, startDate, setStartDate, endDate, setEndDate
             Clear dates
           </button>
           <button onClick={onClose} className="bg-black text-white px-4 py-2 rounded-lg">
-            Close
+            Apply
           </button>
         </div>
       </div>

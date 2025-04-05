@@ -9,9 +9,6 @@ export const instance = axios.create({
 // API Connector Function
 export const apiConnector = async (url: string, method: string, data?: any, headers: any = {}) => {
     try {
-        console.log("Making API call to:", url);
-        console.log("Headers being sent:", headers);
-
         const response = await instance({
             url,
             method,

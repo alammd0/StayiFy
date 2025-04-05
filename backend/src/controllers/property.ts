@@ -136,8 +136,8 @@ export const updatedProperty = async (c: Context) => {
         // get the form Data
         const formData = await c.req.formData();
 
-        // get Property Id
-        const propertyId = formData.get("id") as string;
+        // id from form pram 
+        const propertyId = c.req.param("id")
 
 
         // check 
@@ -331,16 +331,6 @@ export const getPropertyById = async (c: Context) => {
     try {
 
         const propertyId = c.req.param("id");
-        console.log("property Id : " + propertyId)
-
-        // const { success } = idSchema.safeParse(propertyId);
-
-        // if (!success) {
-        //     return c.json({
-        //         message: "Validation Failed",
-        //         error: idSchema.safeParse(propertyId).error
-        //     }, )
-        // }
 
         if (!propertyId) {
             return c.json({
@@ -378,8 +368,6 @@ export const getPropertyById = async (c: Context) => {
                 message: "Property not found"
             }, 404);
         }
-
-        console.log("Property Details : " + propertyDetails)
 
         return c.json({
             message: "Fetch Property Success",

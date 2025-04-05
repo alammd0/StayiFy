@@ -23,8 +23,11 @@ export const propertyEndpoints = {
 export const bookingEndpoints = {
     CREATE_BOOKING_API: `${BACKEND_URL}/api/v1/booking/create-booking`,
     VERIFY_PAYMENT_API: `${BACKEND_URL}/api/v1/booking/verify-payment`,
-    GET_BOOKING_API: `${BACKEND_URL}/api/v1/booking/get-booking`
+    GET_BOOKING_API: `${BACKEND_URL}/api/v1/booking/get-booking`,
+    DELETE_BOOKING_API: `${BACKEND_URL}/api/v1/booking/delete-booking`,
+    ALL_DELETE_BOOKING_API: `${BACKEND_URL}/api/v1/booking/delete-all-booking`
 }
+
 
 // rating endpoints
 export const ratingandreviewEndpoints = {

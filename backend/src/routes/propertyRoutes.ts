@@ -7,7 +7,7 @@ const propertyRoutes = new Hono();
 
 // all route using host 
 propertyRoutes.post("/create-property", auth, hostRole, createProperty);
-propertyRoutes.put("/update-property", auth, hostRole, updatedProperty);
+propertyRoutes.put("/update-property/:id", auth, hostRole, updatedProperty);
 propertyRoutes.delete("/delete-property/:id", auth, hostRole, deleteProperty);
 propertyRoutes.get("/my-property", auth, hostRole, getPropertyByUserId);
 

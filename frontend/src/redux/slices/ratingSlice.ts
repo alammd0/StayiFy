@@ -21,7 +21,7 @@ const ratingSlice = createSlice({
     name: "rating",
     initialState,
     reducers: {
-       setRating : (state, action: PayloadAction<RatingAndReview>) => {state.rating.push(action.payload)}
+        setRating: (state, action: PayloadAction<RatingAndReview>) => { state.rating.push(action.payload) }
     }
 })
 

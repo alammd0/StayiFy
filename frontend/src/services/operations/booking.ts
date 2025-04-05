@@ -8,6 +8,8 @@ const {
     CREATE_BOOKING_API,
     VERIFY_PAYMENT_API,
     GET_BOOKING_API,
+    DELETE_BOOKING_API,
+    ALL_DELETE_BOOKING_API
 } = bookingEndpoints;
 
 type FormData = {
@@ -19,6 +21,12 @@ type FormData = {
     token: string;
     navigate: (path: string) => void;
 };
+
+interface deleteBookingData {
+    token: string;
+    bookingId: number;
+    navigate: (path: string) => void
+}
 
 
 function loadScript(src: string) {
@@ -43,15 +51,12 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
         dispatch(setLoading(true));
 
         try {
-
-            console.log("Total price:", totalPrice);
-
             // Format Dates
             const formattedStartDate = typeof startDate === "string" ? startDate : startDate.toISOString().split("T")[0];
             const formattedEndDate = typeof endDate === "string" ? endDate : endDate.toISOString().split("T")[0];
 
-            console.log("Formatted Start Date:", formattedStartDate);
-            console.log("Formatted End Date:", formattedEndDate);
+            // console.log("Formatted Start Date:", formattedStartDate);
+            // console.log("Formatted End Date:", formattedEndDate);
 
             // Load Razorpay SDK
             const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
@@ -76,22 +81,22 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
                 }
             );
 
-            console.log("API Response:", response.data);
+            // console.log("API Response:", response.data);
 
             // Validate API Response
             if (!response.data || !response.data.orderId) {
                 throw new Error("Invalid response from server. Order ID missing.");
             }
 
-            console.log("Booking Created Successfully:", response.data.data);
+            // console.log("Booking Created Successfully:", response.data.data);
 
             dispatch(setBookings(response.data.data));
 
             // Extract payment details safely
             const { orderId } = response.data || {};
-            console.log("Order ID:", orderId);
+            // console.log("Order ID:", orderId);
             const { price } = response.data.data || {};
-            console.log("Tola Price:", price);
+            // console.log("Tola Price:", price);
 
             if (!price || !orderId) {
                 throw new Error("Invalid payment data received from server.");
@@ -142,7 +147,7 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
             dispatch(setLoading(false));
             toast.dismiss(toastId);
         }
-    };
+};
 
 
 // Get all bookings for a user
@@ -163,8 +168,7 @@ export const getBooking = (token: string, userId: number) => {
                 }
             );
 
-
-            console.log("Response:", response.data.data);
+            // console.log("Response:", response.data.data);
 
             if (!response.data) throw new Error(response.data.message);
 
@@ -179,5 +183,79 @@ export const getBooking = (token: string, userId: number) => {
         }
         dispatch(setLoading(false));
         toast.dismiss(toastid);
+    }
+}
+
+// delete single booking
+export const deleteSingleBooking = ({ token, bookingId, navigate}: deleteBookingData) => {
+
+    console.log("Booking Id inside deleteSingleBooking: ",  bookingId);
+
+    return async (dispatch: any) => {
+        const toastId = toast.loading("Loading...");
+        dispatch(setLoading(true));
+        try {
+
+            const response: any = await apiConnector(
+                `${DELETE_BOOKING_API}`,
+                "DELETE",
+                {
+                    id: bookingId
+                },
+                {
+                    Authorization: `Bearer ${token}`,
+                }
+            );
+
+            console.log("Response booking Delete : " + response);
+
+            console.log("Resoponse booking Delete : " + response.data);
+
+            if (!response.data) throw new Error(response.data.message);
+
+            dispatch(setLoading(false));
+            toast.dismiss(toastId);
+            toast.success("Booking Deleted Successfully");
+            navigate("/");
+        }
+        catch (err) {
+            console.log(err);
+            toast.dismiss(toastId);
+            toast.error("Error deleting Booking");
+        }
+    }
+}
+
+
+// delete all booking 
+export const deleteAllBooking = (token: string, userId: number, navigate: (path: string) => void) => {
+    console.log("Booking Id inside deleteAllBooking: ", userId);
+    return async (dispatch: any) => {
+        const toastId = toast.loading("Loading...");
+        dispatch(setLoading(true));
+
+        try {
+
+            const response: any = await apiConnector(
+                `${ALL_DELETE_BOOKING_API}/${userId}`,
+                "DELETE",
+                null,
+                {
+                    Authorization: `Bearer ${token}`,
+                }
+            )
+
+            console.log("Response : " + response.data);
+
+            dispatch(setLoading(false));
+            toast.dismiss(toastId);
+            toast.success("All Booking Deleted Successfully");
+            navigate("/");
+        }
+        catch (err) {
+            console.log(err);
+            toast.dismiss(toastId);
+            toast.error("Error deleting All Booking");
+        }
     }
 }

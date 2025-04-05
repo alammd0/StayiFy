@@ -180,18 +180,53 @@ export const deleteBookinProperty = async (c: Context) => {
 
     try {
 
-        const userId = c.req.param("userId");
+        const body = await c.req.json();
+        const bookingId = body.id;
+
+        console.log("Booking Id : " + bookingId);
+
+        if (!bookingId) {
+            return c.json({
+                message: "Missing required fields"
+            }, 400);
+        }
+
+        await prisma.booking.delete({
+            where: {
+                id: Number(bookingId)
+            }
+        });
+
+        return c.json({
+            message: "Booking deleted successfully"
+        }, 200);
+    }
+
+    catch (err) {
+        console.log("Error deleting booking:", err);
+        return c.json({
+            message: "Failed to delete booking"
+        }, 400)
+    }
+}
+
+export const clearAllbooking = async (c: Context) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    });
+
+    try {
+        const userid = c.req.param("userId");
 
         await prisma.booking.deleteMany({
             where: {
-                userId: Number(userId)
+                userId: Number(userid)
             }
-        })
+        });
 
         return c.json({
-            message: "Bookings deleted successfully"
+            message: "All Clear deleted successfully"
         }, 200);
-
     }
     catch (err) {
         console.log("Error deleting booking:", err);

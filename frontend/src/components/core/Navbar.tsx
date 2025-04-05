@@ -53,7 +53,7 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {logoutModal && <LogoutModal logoutHandler={logoutHandler} setLogoutModal={setLogoutModal} />}
+            {logoutModal && <LogoutModal logoutHandler={logoutHandler} setLogoutModal={setLogoutModal} texts="Logout" />}
         </div>
     );
 };

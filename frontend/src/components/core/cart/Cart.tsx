@@ -24,16 +24,14 @@ const Cart = () => {
 
     const dispatch: AppDispatch = useDispatch();
 
-    // Calculate total days dynamically using useMemo
     const totalDays = useMemo(() => {
         if (startDate && endDate) {
             const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-            return Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24))); // Ensure minimum 1 day
+            return Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1); // Ensure minimum 1 day
         }
-        return 0;
+        return 1;
     }, [startDate, endDate]);
 
-    console.log("Total Days:", totalDays);
 
 
     function handlePayment(propertyId: number, amount: number) {
@@ -41,8 +39,6 @@ const Cart = () => {
             toast.error("Please select check-in and check-out dates");
             return;
         }
-
-        console.log("Click before dispatch");
 
         // Dispatch the createBooking action with the required object
         dispatch(
@@ -56,9 +52,21 @@ const Cart = () => {
                 navigate,
             }) as any
         );
-
-        console.log("Click after dispatch");
     }
+
+    const nights = Math.floor(
+        (startDate && endDate) ?
+            (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24) :
+            0
+    );
+
+    // const totalDays = Math.floor(
+    //     (startDate && endDate) ?
+    //         (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24) :
+    //         0
+    // ) + 1;
+
+
 
     return (
         <div>
@@ -106,7 +114,8 @@ const Cart = () => {
                                         <p className="mt-2 text-lg font-semibold">Check-out: {endDate.toLocaleDateString()}</p>
                                     )}
 
-                                    <p className="mt-2 text-lg font-semibold">Total Days : {totalDays}</p>
+                                    <p className="mt-2 text-lg font-semibold">Total Night Stay : {nights}</p>
+                                    <p className="mt-2 text-lg font-semibold">Total Day Stay : {totalDays}</p>
                                 </div>
 
                                 <p className="flex items-center text-xl">

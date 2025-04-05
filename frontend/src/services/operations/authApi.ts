@@ -34,35 +34,26 @@ export const signup = ({ username, name, email, password, phoneNumber, accountTy
         dispatch(setLoading(true));
 
         try {
-            console.log("Sending User Data:", { username, name, email, password, phoneNumber, accountType });
-
             const response: any = await apiConnector(SIGNUP_API, "POST", { username, name, email, password, phoneNumber, accountType });
-
-            console.log("Resopose : " + response)
 
             if (!response || !response.data) {
                 throw new Error("Invalid API response");
             }
 
-            console.log("Signup Response:", response.data);
-
             dispatch(setUser(response.data.data));
             dispatch(setToken(response.data.token));
-
             toast.dismiss(toastId);
             toast.success("Signup Successful");
             navigate("/login");
         }
         catch (err: any) {
             console.error("Signup Error:", err);
-
             if (err.response) {
                 console.error("Error Response Data:", err.response.data);
                 console.error("Error Status Code:", err.response.status);
             } else {
                 console.error("Error Message:", err.message);
             }
-
             toast.dismiss(toastId);
             const errorMessage = err.response?.data?.message || "Signup Failed";
             toast.error(errorMessage);
@@ -89,7 +80,7 @@ export const login = ({ email, password, navigate }: loginInput) => {
                 throw new Error("Invalid API response");
             }
 
-            console.log("response Inside login : ", response.data);
+            // console.log("response Inside login : ", response.data);
 
             dispatch(setUser(response.data.data));
             dispatch(setToken(response.data.token));

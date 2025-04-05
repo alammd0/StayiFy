@@ -13,6 +13,7 @@ import OpenRoute from "./components/common/OpenRoute";
 import Cart from "./components/core/cart/Cart";
 import MyBooking from "./components/core/cart/MyBooking";
 
+
 function App() {
 
   const location = useLocation();

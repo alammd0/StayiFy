@@ -5,8 +5,6 @@ import { RootState } from "../../redux/store/app";
 const OpenRoute = () => {
     const token = useSelector((state: RootState) => state.auth.token);
     const user = useSelector((state: any) => state.auth.user);
-    console.log(user.accountType);
-
     return token && user.accountType === "USER" ? <Outlet /> : <Navigate to="/login" replace />;
 };
 

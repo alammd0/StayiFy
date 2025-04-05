@@ -4,6 +4,7 @@ import { Rating } from 'react-simple-star-rating'
 import { AppDispatch } from "../../../redux/store/app";
 import { useDispatch, useSelector } from "react-redux";
 import { createRating } from "../../../services/operations/rating";
+import { deleteSingleBooking } from "../../../services/operations/booking";
 import { useNavigate } from "react-router-dom";
 
 
@@ -14,17 +15,11 @@ interface PropertyCardProps {
     user: { name: string, phoneNumber: number };
     price: number,
     userId: number,
-    propertyId: number
+    propertyId: number,
+    bookingId: number
 }
 
-const PropertyCard = ({ startDate, endDate, property, user, price, userId, propertyId }: PropertyCardProps) => {
-
-    console.log("Property : ", property);
-    console.log("User : ", user);
-    console.log("startDate", startDate);
-    console.log("endDate", endDate);
-    console.log("price", userId);
-    console.log("propertyId", propertyId);
+const PropertyCard = ({ startDate, endDate, property, user, price, userId, propertyId, bookingId }: PropertyCardProps) => {
 
     const [ratingModal, setRatingModal] = useState(false);
     const [rating, setRating] = useState<number | null>(null); // State for rating
@@ -33,6 +28,7 @@ const PropertyCard = ({ startDate, endDate, property, user, price, userId, prope
     const dispatch: AppDispatch = useDispatch();
     const token = useSelector((state: any) => state.auth.token);
     const navigate = useNavigate();
+    console.log("bookingId:", bookingId);
 
 
     function ratingSubmit() {
@@ -41,12 +37,12 @@ const PropertyCard = ({ startDate, endDate, property, user, price, userId, prope
             return;
         }
 
-        dispatch(createRating({token, propertyId, userId, rating, comment, navigate}));
+        dispatch(createRating({ token, propertyId, userId, rating, comment, navigate }));
+    }
 
-        console.log("Rating Type:", typeof rating);
-        console.log("Comment:", comment);
-        console.log("Property Id:", propertyId);
-        console.log("User Id:", userId);
+    function handleDeleteSingleBooking() {
+        if (!token) return
+        dispatch(deleteSingleBooking({ token, bookingId, navigate }));
     }
 
     return (
@@ -74,7 +70,11 @@ const PropertyCard = ({ startDate, endDate, property, user, price, userId, prope
                     </div>
                 </div>
 
-                <button className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded cursor-pointer" onClick={() => setRatingModal(true)}>Give Review and Raiting</button>
+                <div className="flex flex-col gap-5">
+                    <button className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded cursor-pointer" onClick={() => setRatingModal(true)}>Give Review and Raiting</button>
+                    <button className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded cursor-pointer" onClick={handleDeleteSingleBooking}>Clear Your Booking</button>
+                </div>
+
             </div>
 
             {
@@ -96,10 +96,14 @@ const PropertyCard = ({ startDate, endDate, property, user, price, userId, prope
                                 </div>
                                 <div className="flex gap-2 flex-col">
                                     <p className="text-slate-200 text-lg">Comment :</p>
-                                    <textarea value={comment} onChange={(e) => setComment(e.target.value)} className="w-full bg-slate-600 border-2 border-slate-950 outline-none hover:border-slate-700 p-2 rounded-sm" name="" id="" cols={40} rows={5}></textarea>
+                                    <textarea value={comment} onChange={(e) => setComment(e.target.value)} className="w-full bg-slate-600 border-2 text-xl text-slate-300 border-slate-950 outline-none hover:border-slate-700 p-2 rounded-sm" name="" id="" cols={40} rows={5}></textarea>
                                 </div>
 
-                                <button className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded cursor-pointer" onClick={ratingSubmit}>Submit</button>
+                                <div className="flex gap-2 items-center justify-center">
+                                    <button className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded cursor-pointer" onClick={ratingSubmit}>Submit</button>
+                                    <button className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded cursor-pointer" onClick={() => setRatingModal(false)}>Close</button>
+                                </div>
+
                             </div>
                         </div>
 
