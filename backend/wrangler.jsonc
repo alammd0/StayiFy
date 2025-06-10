@@ -7,14 +7,14 @@
     "nodejs_compat"
   ],
   "vars": {
-    "DATABASE_URL": "",
+    "DATABASE_URL": "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDFKWEFEMFRLTTlTVkdYWlc1VzdBM1BINDIiLCJ0ZW5hbnRfaWQiOiI3YzI1ODgyNmE0OTkwOGVmYmUyN2ViNDViNzVkNDJmYmQyYTJlZDRiMDE1ODAzNjgxZDZmZmNhZTYzYTg4ZGMyIiwiaW50ZXJuYWxfc2VjcmV0IjoiMzRhYzg2MjEtZGI2Ni00NzRlLWEwNzQtMzM3NDE2NjMwMDc3In0.AmU2kV_dHzlds0KwEwUB5aMj6CE4alHUy68O2n4gtPM",
     "JWT_SECRET": "KhalidArbn",
-    "CLOUDINARY_CLOUD_NAME": "",
-    "CLOUDINARY_API_KEY": "",
-    "CLOUDINARY_API_SECRET": "",
-    "CLOUDINARY_UPLOAD_PRESET": "",
-    "RAZORPAY_KEY_ID": "",
-    "RAZORPAY_KEY_SECRET": "",
+    "CLOUDINARY_CLOUD_NAME": "properties",
+    "CLOUDINARY_API_KEY": "459815643398939",
+    "CLOUDINARY_API_SECRET": "R6FzT8dees7GLMI5SY9lForThfU",
+    "CLOUDINARY_UPLOAD_PRESET": "property_uploads",
+    "RAZORPAY_KEY_ID": "rzp_test_T0PAGmQDFx6UkM",
+    "RAZORPAY_KEY_SECRET": "lZXY0FvP6f6UTGaqvwNMBpCB",
   },
   // "compatibility_flags": [
   //   "nodejs_compat"

@@ -1,8 +1,10 @@
 export const uploadImageCloudinary = async (fileBuffer: Buffer, env: any) => {
     const cloudinaryUploadUrl = `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/image/upload`;
 
+    // Use 'form-data' package for Node.js environment
+    const FormData = require('form-data');
     const formData = new FormData();
-    formData.append("file", new Blob([fileBuffer]), "image.jpg"); // Convert Buffer to Blob
+    formData.append("file", fileBuffer, { filename: "image.jpg" }); // Directly append Buffer
     formData.append("upload_preset", "Alam"); 
 
     console.log(formData)
