@@ -17,10 +17,10 @@ const Cart = () => {
     const [endDate, setEndDate] = useState<Date | null>(null);
 
     const token = useSelector((state: any) => state.auth.token);
-    console.log("token Cart Page:", token);
+    // console.log("token Cart Page:", token);
 
     const { id } = useSelector((state: any) => state.auth.user);
-    console.log("user Cart Page:", id);
+    // console.log("user Cart Page:", id);
 
     const dispatch: AppDispatch = useDispatch();
 

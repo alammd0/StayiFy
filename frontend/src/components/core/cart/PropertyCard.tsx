@@ -28,7 +28,7 @@ const PropertyCard = ({ startDate, endDate, property, user, price, userId, prope
     const dispatch: AppDispatch = useDispatch();
     const token = useSelector((state: any) => state.auth.token);
     const navigate = useNavigate();
-    console.log("bookingId:", bookingId);
+    // console.log("bookingId:", bookingId);
 
 
     function ratingSubmit() {

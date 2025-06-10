@@ -60,6 +60,9 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
 
             // Load Razorpay SDK
             const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+
+            // console.log("Responsing -> ", res);
+
             if (!res) {
                 toast.error("Razorpay SDK failed to load. Are you online?");
                 return;
@@ -80,6 +83,7 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
                     Authorization: `Bearer ${token}`,
                 }
             );
+            
 
             // console.log("API Response:", response.data);
 
@@ -104,7 +108,7 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
 
             // Setup Razorpay payment options
             const options = {
-                key: "rzp_test_iW9xjCLsefmddP",
+                key: "rzp_test_5VfUVb1EKraVie",
                 currency: "INR",
                 amount: `${price * 100}`,
                 order_id: `${orderId}`,
@@ -125,7 +129,7 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
                         }
                     );
 
-                    console.log("Payment Verification Response:", verifyResponse.data);
+                    // console.log("Payment Verification Response:", verifyResponse.data);
 
                     if (!verifyResponse.data) {
                         throw new Error(verifyResponse.data.message);
@@ -136,6 +140,8 @@ export const createBooking = ({ userId, propertyId, totalPrice, startDate, endDa
                     navigate(`/dashboard/my-booking/${userId}`);
                 },
             };
+
+            // console.log("Option -> ", options)
 
             // Open Razorpay Payment Window
             const rzp = new (window as any).Razorpay(options);

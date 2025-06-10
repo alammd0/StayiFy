@@ -17,7 +17,7 @@ import MyBooking from "./components/core/cart/MyBooking";
 function App() {
 
   const location = useLocation();
-  console.log(location.pathname[-1]);
+  // console.log(location.pathname[-1]);
   const hideNavbarPart = ["/login", "/signup", "/dashboard/profile", "/dashboard/create-property", "/dashboard/my-properties", "/dashboard/my-booking"];
 
   const currentPath = location.pathname;

@@ -22,12 +22,12 @@ export const createRating = async (c: Context) => {
 
         const body = await c.req.json();
 
-        console.log("Request body : ", body);
+        // console.log("Request body : ", body);
 
 
         const { success } = ratingSchema.safeParse(body);
 
-        console.log("Success : ", success);
+        // console.log("Success : ", success);
 
         if (!success) {
             return c.json({
