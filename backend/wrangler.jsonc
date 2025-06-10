@@ -13,8 +13,8 @@
     "CLOUDINARY_API_KEY": "459815643398939",
     "CLOUDINARY_API_SECRET": "R6FzT8dees7GLMI5SY9lForThfU",
     "CLOUDINARY_UPLOAD_PRESET": "property_uploads",
-    "RAZORPAY_KEY_ID": "rzp_test_T0PAGmQDFx6UkM",
-    "RAZORPAY_KEY_SECRET": "lZXY0FvP6f6UTGaqvwNMBpCB",
+    "RAZORPAY_KEY_ID": "rzp_test_5VfUVb1EKraVie",
+    "RAZORPAY_KEY_SECRET": "svkgVWuVUwz3XNtesaZZjz05",
   },
   // "compatibility_flags": [
   //   "nodejs_compat"
