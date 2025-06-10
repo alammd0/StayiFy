@@ -72,7 +72,7 @@ const Home = () => {
                                     }
                                 </div>
                             ) : (
-                                <p>No properties found</p>
+                                <p className="flex justify-center items-center h-[346px]">No properties found</p>
                             )
                         }
                     </div>

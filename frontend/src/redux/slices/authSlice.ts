@@ -11,7 +11,7 @@ interface authState {
 const initialState: authState = {
     user: null,
     loading: false,
-    token: localStorage.getItem('token') || null,
+    token: null,
     error: null
 }
 
@@ -31,6 +31,11 @@ const authSlice = createSlice({
         setLoading(state, action: PayloadAction<boolean>) {
             state.loading = action.payload
         },
+
+        logOutUser(state){
+            state.token = null,
+            state.user = null
+        }
     },
 });
 
